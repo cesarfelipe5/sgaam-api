@@ -1,24 +1,34 @@
 import { NextFunction, Request, Response } from "express";
-import jwt from "jsonwebtoken";
+import { body, validationResult } from "express-validator";
 
-export const authenticateToken = (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  const token = req.headers["authorization"]?.split(" ")[1];
+export const authValidator = {
+  validateLogin: [
+    body("email").isEmail().withMessage("E-mail must be a valid email"),
+    body("senha").notEmpty().withMessage("Password is required"),
 
-  if (!token) {
-    return res.status(401).json({ message: "Access denied" });
-  }
+    (req: Request, res: Response, next: NextFunction) => {
+      const errors = validationResult(req);
 
-  try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET!);
+      if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+      }
 
-    (req as any).user = decoded;
+      next();
+    },
+  ],
+  validateRegister: [
+    body("email").isEmail().withMessage("E-mail must be a valid email"),
+    body("nome").notEmpty().withMessage("Name is required"),
+    body("senha").notEmpty().withMessage("Password is required"),
 
-    next();
-  } catch (error) {
-    res.status(403).json({ message: "Invalid token" });
-  }
+    (req: Request, res: Response, next: NextFunction) => {
+      const errors = validationResult(req);
+
+      if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+      }
+
+      next();
+    },
+  ],
 };

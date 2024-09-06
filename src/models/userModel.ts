@@ -4,26 +4,33 @@ import { pool } from "../config/db";
 
 export interface User {
   id: number;
-  username: string;
-  password: string;
+  nome: string;
+  email: string;
+  senha: string;
+}
+
+interface CreateUserProps {
+  nome: string;
+  email: string;
+  senha: string;
 }
 
 export const userModel = {
-  findUserByUsername: async (username: string): Promise<User | null> => {
+  findUserByUsername: async (email: string): Promise<User | null> => {
     const [results] = await pool.query(
       "SELECT * FROM usuarios WHERE email = ?",
-      [username]
+      [email]
     );
 
     return (results as RowDataPacket[])[0] as User | null;
   },
 
-  createUser: async (username: string, password: string) => {
-    const hashedPassword = await bcrypt.hash(password, 10);
+  createUser: async ({ nome, email, senha }: CreateUserProps) => {
+    const hashedPassword = await bcrypt.hash(senha, 10);
 
     return await pool.query(
-      "INSERT INTO users (username, password) VALUES (?, ?)",
-      [username, hashedPassword]
+      "INSERT INTO usuarios (nome, email, senha) VALUES (?, ?, ?)",
+      [nome, email, hashedPassword]
     );
   },
 };

@@ -1,23 +1,21 @@
-import bcrypt from "bcryptjs";
 import { userModel } from "../models/userModel";
 
 interface CreateUserProps {
-  username: string;
-  password: string;
+  nome: string;
+  email: string;
+  senha: string;
 }
 
 interface FindUserByUsername {
-  username: string;
+  email: string;
 }
 
 export const userService = {
-  createUser: async ({ username, password }: CreateUserProps) => {
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    await userModel.createUser(username, hashedPassword);
+  createUser: async ({ nome, email, senha }: CreateUserProps) => {
+    await userModel.createUser({ nome, email, senha });
   },
 
-  findUserByUsername: async ({ username }: FindUserByUsername) => {
-    return userModel.findUserByUsername(username);
+  findUserByUsername: async ({ email }: FindUserByUsername) => {
+    return userModel.findUserByUsername(email);
   },
 };

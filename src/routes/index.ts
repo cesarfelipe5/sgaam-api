@@ -1,5 +1,5 @@
 import express from "express";
-import { authenticateToken } from "../middlewares/authMiddleware";
+import { authenticateToken } from "../middlewares/authenticateMiddleware";
 import { authRouter } from "./authRoutes";
 import { profileRouter } from "./profileRoutes";
 

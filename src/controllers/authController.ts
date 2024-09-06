@@ -5,30 +5,30 @@ import { userService } from "../services/userServices";
 
 export const authController = {
   register: async (req: Request, res: Response) => {
-    const { username, password } = req.body;
+    const { nome, email, senha } = req.body;
 
-    await userService.createUser({ username, password });
+    await userService.createUser({ nome, email, senha });
 
     res.status(201).json({ message: "User registered successfully" });
   },
 
   login: async (req: Request, res: Response) => {
-    const { username, password } = req.body;
+    const { email, senha } = req.body;
 
-    const user = await userService.findUserByUsername(username);
+    const user = await userService.findUserByUsername({ email });
 
     if (!user) {
-      return res.status(401).json({ message: "Invalid credentials" });
+      return res.status(401).json({ message: "Invalid credentials 1" });
     }
 
-    const isValid = await bcrypt.compare(password, user.password);
+    const isValid = await bcrypt.compare(senha, user.senha);
 
     if (!isValid) {
-      return res.status(401).json({ message: "Invalid credentials" });
+      return res.status(401).json({ message: "Invalid credentials 2" });
     }
 
     const token = jwt.sign(
-      { id: user.id, username: user.username },
+      { id: user.id, username: user.email },
       process.env.JWT_SECRET!,
       { expiresIn: "1d" }
     );
