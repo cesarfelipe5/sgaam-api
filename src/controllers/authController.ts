@@ -1,30 +1,38 @@
 import bcrypt from "bcryptjs";
 import { Request, Response } from "express";
 import jwt from "jsonwebtoken";
-import { userService } from "../services/userServices";
+import { authService } from "../services";
 
 export const authController = {
   register: async (req: Request, res: Response) => {
     const { nome, email, senha } = req.body;
 
-    await userService.createUser({ nome, email, senha });
+    const user = await authService.createUser({ nome, email, senha });
 
-    res.status(201).json({ message: "User registered successfully" });
+    if (user.id) {
+      return res
+        .status(201)
+        .json({ message: "Usuário registrado com sucesso!" });
+    }
+
+    return res
+      .status(500)
+      .json({ message: "Houve um problema na criação do usuário." });
   },
 
   login: async (req: Request, res: Response) => {
     const { email, senha } = req.body;
 
-    const user = await userService.findUserByUsername({ email });
+    const user = await authService.findUserByUsername({ email });
 
     if (!user) {
-      return res.status(401).json({ message: "Invalid credentials 1" });
+      return res.status(401).json({ message: "Usuário ou senha inválido." });
     }
 
     const isValid = await bcrypt.compare(senha, user.senha);
 
     if (!isValid) {
-      return res.status(401).json({ message: "Invalid credentials 2" });
+      return res.status(401).json({ message: "Usuário ou senha inválido." });
     }
 
     const token = jwt.sign(

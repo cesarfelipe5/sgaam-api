@@ -1,6 +1,6 @@
 import dotenv from "dotenv";
 import express from "express";
-import { apiRouter } from "./routes";
+import { apiRouter } from "./src/routes";
 
 dotenv.config();
 

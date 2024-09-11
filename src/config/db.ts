@@ -1,28 +1,27 @@
 import dotenv from "dotenv";
-import mysql from "mysql2/promise";
 
 dotenv.config();
 
-export const pool = mysql.createPool({
-  host: process.env.DB_HOST,
-  user: process.env.DB_USER,
-  password: process.env.DB_PASS,
-  database: process.env.DB_NAME,
+import { Sequelize } from "sequelize";
+
+const user = process.env.DB_USER || "admin";
+const password = process.env.DB_PASS || "admin";
+const name = process.env.DB_NAME || "sgaam";
+const host = process.env.DB_HOST || "localhost";
+const port = process.env.DB_PORT || "3306";
+
+export const sequelize = new Sequelize(name, user, password, {
+  host,
+  port: +port,
+  dialect: "mysql",
 });
 
-// import dotenv from "dotenv";
-// import { Sequelize } from "sequelize";
-
-// dotenv.config();
-
-// const DB_NAME = process.env.DB_NAME || "";
-// const DB_USER = process.env.DB_USER || "";
-// const DB_PASS = process.env.DB_PASS || "";
-// const DB_HOST = process.env.DB_HOST || "";
-
-// const db = new Sequelize(DB_NAME, DB_USER, DB_PASS, {
-//   host: DB_HOST,
-//   dialect: "mysql",
-// });
-
-// export { db };
+// Testar conexão
+(async () => {
+  try {
+    await sequelize.authenticate();
+    console.log("Connection has been established successfully.");
+  } catch (error) {
+    console.error("Unable to connect to the database:", error);
+  }
+})();
