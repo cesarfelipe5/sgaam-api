@@ -1,7 +1,7 @@
 import { body } from "express-validator";
-import { handleValidationErrors } from "../middlewares";
+import { handleValidationErrors } from "../utils/validationErrors";
 
-export const authValidator = {
+export const authMiddleware = {
   validateLogin: [
     body("email").isEmail().withMessage("E-mail must be a valid email"),
     body("senha").notEmpty().withMessage("Password is required"),

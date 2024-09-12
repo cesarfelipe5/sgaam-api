@@ -1,12 +1,12 @@
 import { body, param } from "express-validator";
-import { handleValidationErrors } from "../middlewares";
 import { Aluno } from "../models";
 import { createBaseService } from "../services";
-import { existsValidator, uniqueValidator } from "./validator";
+import { handleValidationErrors } from "../utils/validationErrors";
+import { existsValidator, uniqueValidator } from "../validator";
 
 const alunoService = createBaseService(Aluno);
 
-export const alunoValidator = {
+export const alunoMiddleware = {
   validateCreate: [
     body("nome")
       .notEmpty()
@@ -88,7 +88,8 @@ export const alunoValidator = {
       .isLength({ min: 11, max: 11 })
       .withMessage("CPF deve ter 11 dígitos")
       .matches(/^\d{11}$/)
-      .withMessage("CPF deve conter apenas números"),
+      .withMessage("CPF deve conter apenas números")
+      .custom(uniqueValidator({ service: alunoService, field: "cpf" })),
 
     body("rg")
       .optional()

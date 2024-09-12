@@ -23,7 +23,7 @@ export const alunoService = {
   },
 
   /**
-   * Cria um novo aluno
+   * Lista os alunos de forma paginada
    * @param limit - Máximo de dados a retornar
    * @param offset - Em qual posição inciar
    */
@@ -40,12 +40,6 @@ export const alunoService = {
    * Cria um novo aluno
    * @param data - Dados do aluno a ser criado
    */
-  // createAluno: async (data: AlunoCreationAttributes): Promise<Aluno> => {
-  //   const aluno = await Aluno.create(data, { logging: console.log });
-
-  //   return aluno;
-  // },
-
   createAluno: async (data: AlunoCreationAttributes): Promise<Aluno> => {
     try {
       const aluno = await Aluno.create(data, { logging: console.log });
@@ -54,22 +48,6 @@ export const alunoService = {
       console.error("Erro ao criar aluno:", error);
       throw error; // Ou faça o tratamento adequado do erro
     }
-  },
-
-  /**
-   * Remove um aluno pelo ID
-   * @param id - ID do aluno a ser removido
-   */
-  removeAlunoById: async (id: number) => {
-    const aluno = await Aluno.findByPk(id);
-
-    if (!aluno) {
-      throw new Error("Aluno não encontrado");
-    }
-
-    await aluno.destroy();
-
-    return { message: "Aluno removido com sucesso" };
   },
 
   /**

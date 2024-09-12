@@ -2,6 +2,7 @@ import express from "express";
 import { authenticateToken } from "../middlewares/authenticateMiddleware";
 import { alunoRouter } from "./alunoRoutes";
 import { authRouter } from "./authRoutes";
+import { modalidadeRouter } from "./modalidadeRoutes";
 // import { profileRouter } from "./profileRoutes";
 
 // Definir um roteador global para todas as rotas
@@ -14,6 +15,7 @@ apiRouter.use(authenticateToken);
 
 // Aqui estão as rotas que necessitam de autenticação
 apiRouter.use("/aluno", alunoRouter);
+apiRouter.use("/modalidade", modalidadeRouter);
 // apiRouter.use("/profile", profileRouter);
 
 export { apiRouter };

@@ -1,2 +1,1 @@
-export { alunoValidator } from "./alunoValidator";
-export { authValidator } from "./authValidator";
+export { existsValidator, uniqueValidator } from "./validator";

@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { alunoController } from "../controllers";
-import { alunoValidator } from "../validator";
+import { alunoMiddleware } from "../middlewares";
 
 const alunoRouter = Router();
 
@@ -8,13 +8,13 @@ alunoRouter.get("/", alunoController.listOrSearch);
 
 alunoRouter.get("/:id", alunoController.byId);
 
-alunoRouter.post("/", alunoValidator.validateCreate, alunoController.create);
+alunoRouter.post("/", alunoMiddleware.validateCreate, alunoController.create);
 
-alunoRouter.put("/:id", alunoValidator.validateUpdate, alunoController.update);
+alunoRouter.put("/:id", alunoMiddleware.validateUpdate, alunoController.update);
 
 alunoRouter.delete(
   "/:id",
-  alunoValidator.validateRemove,
+  alunoMiddleware.validateRemove,
   alunoController.remove
 );
 

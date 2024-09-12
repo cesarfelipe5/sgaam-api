@@ -1,2 +1,4 @@
+export { alunoMiddleware } from "./alunoMiddleware";
 export { authenticateToken } from "./authenticateMiddleware";
-export { handleValidationErrors } from "./validationErrorsMiddlewares";
+export { authMiddleware } from "./authMiddleware";
+export { modalidadeMiddleware } from "./modalidadeMiddleware";

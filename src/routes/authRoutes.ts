@@ -1,15 +1,15 @@
 import { Router } from "express";
 import { authController } from "../controllers/authController";
-import { authValidator } from "../validator";
+import { authMiddleware } from "../middlewares";
 
 const authRouter = Router();
 
 authRouter.post(
   "/register",
-  authValidator.validateRegister,
+  authMiddleware.validateRegister,
   authController.register
 );
 
-authRouter.post("/login", authValidator.validateLogin, authController.login);
+authRouter.post("/login", authMiddleware.validateLogin, authController.login);
 
 export { authRouter };
