@@ -1,7 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { validationResult } from "express-validator";
 
-// Função para retornar erros de validação
 export const handleValidationErrors = (
   req: Request,
   res: Response,
@@ -12,5 +11,6 @@ export const handleValidationErrors = (
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() });
   }
+
   next();
 };

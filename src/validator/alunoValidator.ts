@@ -1,8 +1,13 @@
-import { body } from "express-validator";
+import { body, param } from "express-validator";
 import { handleValidationErrors } from "../middlewares";
+import { Aluno } from "../models";
+import { createBaseService } from "../services";
+import { existsValidator, uniqueValidator } from "./validator";
+
+const alunoService = createBaseService(Aluno);
 
 export const alunoValidator = {
-  validateRegister: [
+  validateCreate: [
     body("nome")
       .notEmpty()
       .withMessage("Nome é obrigatório")
@@ -15,7 +20,8 @@ export const alunoValidator = {
       .isLength({ min: 11, max: 11 })
       .withMessage("CPF deve ter 11 dígitos")
       .matches(/^\d{11}$/)
-      .withMessage("CPF deve conter apenas números"),
+      .withMessage("CPF deve conter apenas números")
+      .custom(uniqueValidator({ service: alunoService, field: "cpf" })),
 
     body("rg")
       .notEmpty()
@@ -40,8 +46,8 @@ export const alunoValidator = {
     body("cep")
       .notEmpty()
       .withMessage("CEP é obrigatório")
-      .matches(/^\d{5}-\d{3}$/)
-      .withMessage("CEP deve estar no formato 00000-000"),
+      .matches(/^\d{8}$/)
+      .withMessage("CEP deve conter apenas números"),
 
     body("numero")
       .notEmpty()
@@ -65,6 +71,13 @@ export const alunoValidator = {
     handleValidationErrors,
   ],
   validateUpdate: [
+    param("id")
+      .notEmpty()
+      .withMessage("ID é obrigatório")
+      .isNumeric() // ou use .isUUID() caso seja um UUID
+      .withMessage("ID inválido")
+      .custom(existsValidator({ service: alunoService })),
+
     body("nome")
       .optional()
       .isLength({ min: 2 })
@@ -96,8 +109,8 @@ export const alunoValidator = {
 
     body("cep")
       .optional()
-      .matches(/^\d{5}-\d{3}$/)
-      .withMessage("CEP deve estar no formato 00000-000"),
+      .matches(/^\d{8}$/)
+      .withMessage("CEP deve conter apenas números"),
 
     body("numero")
       .optional()
@@ -113,6 +126,18 @@ export const alunoValidator = {
       .optional()
       .isLength({ min: 2 })
       .withMessage("Logradouro deve ter pelo menos 2 caracteres"),
+
+    // Middleware de validação dos resultados
+    handleValidationErrors,
+  ],
+
+  validateRemove: [
+    param("id")
+      .notEmpty()
+      .withMessage("ID é obrigatório")
+      .isNumeric() // ou use .isUUID() caso seja um UUID
+      .withMessage("ID inválido")
+      .custom(existsValidator({ service: alunoService })),
 
     // Middleware de validação dos resultados
     handleValidationErrors,

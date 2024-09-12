@@ -1,23 +1,21 @@
 import { Router } from "express";
 import { alunoController } from "../controllers";
-import { alunoMiddleware } from "../middlewares";
 import { alunoValidator } from "../validator";
-import { validateId } from "../validator/validator";
 
 const alunoRouter = Router();
 
-alunoRouter.post(
-  "/",
-  alunoValidator.validateRegister,
-  alunoController.register
-);
+alunoRouter.get("/", alunoController.listOrSearch);
 
-alunoRouter.put(
+alunoRouter.get("/:id", alunoController.byId);
+
+alunoRouter.post("/", alunoValidator.validateCreate, alunoController.create);
+
+alunoRouter.put("/:id", alunoValidator.validateUpdate, alunoController.update);
+
+alunoRouter.delete(
   "/:id",
-  validateId,
-  alunoMiddleware.checkAlunoExists,
-  alunoValidator.validateUpdate,
-  alunoController.update
+  alunoValidator.validateRemove,
+  alunoController.remove
 );
 
 export { alunoRouter };
