@@ -1,4 +1,4 @@
-import { DataTypes, Model } from "sequelize";
+import { DataTypes, Model, Optional } from "sequelize";
 import { sequelize } from "../config/db"; // Importe a conexão do Sequelize
 import { Pagamento } from "./pagamentoModel";
 import { Permissao } from "./permissaoModel";
@@ -13,7 +13,20 @@ export interface UsuarioAttributes {
   updatedAt?: Date;
 }
 
-export class Usuario extends Model<UsuarioAttributes> {
+export interface UsuarioCreationAttributes
+  extends Optional<UsuarioAttributes, "id" | "createdAt" | "updatedAt"> {}
+
+export class Usuario
+  extends Model<UsuarioAttributes, UsuarioCreationAttributes>
+  implements UsuarioAttributes
+{
+  public id!: number;
+  public nome!: string;
+  public email!: string;
+  public senha!: string;
+  public readonly createdAt!: Date;
+  public readonly updatedAt!: Date;
+
   static associate() {
     Usuario.hasMany(Pagamento, {
       foreignKey: "idUsuario",

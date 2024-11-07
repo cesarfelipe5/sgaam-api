@@ -1,4 +1,4 @@
-import { DataTypes, Model } from "sequelize";
+import { DataTypes, Model, Optional } from "sequelize";
 import { sequelize } from "../config/db";
 import { FormaPagamento } from "./formaPagamentoModel";
 import { PlanoAluno } from "./planoAlunoModel";
@@ -18,6 +18,10 @@ export interface PagamentoAttributes {
   createdAt?: Date;
   updatedAt?: Date;
 }
+
+// Interface para os atributos de criação do Aluno (sem o id, createdAt, updatedAt)
+export interface PagamentoCreationAttributes
+  extends Optional<PagamentoAttributes, "id" | "createdAt" | "updatedAt"> {}
 
 export class Pagamento extends Model<PagamentoAttributes> {
   static associate() {
@@ -50,7 +54,7 @@ Pagamento.init(
       allowNull: false,
     },
     valor: {
-      type: DataTypes.NUMBER,
+      type: DataTypes.DECIMAL(15, 2),
       allowNull: false,
     },
     observacao: {

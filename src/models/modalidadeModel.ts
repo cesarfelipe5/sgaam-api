@@ -1,4 +1,4 @@
-import { DataTypes, Model } from "sequelize";
+import { DataTypes, Model, Optional } from "sequelize";
 import { sequelize } from "../config/db";
 import { PlanoModalidade } from "./planoModalidadeModel";
 import { Plano } from "./planoModel";
@@ -13,6 +13,9 @@ export interface ModalidadeAttributes {
   createdAt?: Date;
   updatedAt?: Date;
 }
+
+export interface ModalidadeCreationAttributes
+  extends Optional<ModalidadeAttributes, "id" | "createdAt" | "updatedAt"> {}
 
 export class Modalidade extends Model<ModalidadeAttributes> {
   static associate() {
@@ -46,7 +49,7 @@ Modalidade.init(
       defaultValue: true,
     },
     valor: {
-      type: DataTypes.NUMBER,
+      type: DataTypes.DECIMAL(15, 2),
       allowNull: false,
     },
   },

@@ -1,4 +1,4 @@
-import { DataTypes, Model } from "sequelize";
+import { DataTypes, Model, Optional } from "sequelize";
 import { sequelize } from "../config/db";
 import { Aluno } from "./alunoModel";
 import { FormaPagamento } from "./formaPagamentoModel";
@@ -14,6 +14,10 @@ export interface PlanoAlunoAttributes {
   createdAt?: Date;
   updatedAt?: Date;
 }
+
+// Interface para os atributos de criação do Aluno (sem o id, createdAt, updatedAt)
+export interface PlanoAlunoCreationAttributes
+  extends Optional<PlanoAlunoAttributes, "id" | "createdAt" | "updatedAt"> {}
 
 export class PlanoAluno extends Model<PlanoAlunoAttributes> {
   // Método para definir associações

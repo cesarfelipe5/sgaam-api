@@ -1,5 +1,9 @@
 import { Op } from "sequelize";
-import { Modalidade, ModalidadeCreationAttributes } from "../models";
+import {
+  Modalidade,
+  ModalidadeAttributes,
+  ModalidadeCreationAttributes,
+} from "../models";
 
 interface SearchModalidade {
   nome: string;
@@ -63,10 +67,7 @@ export const modalidadeService = {
    * @param id - ID da modalidade
    * @param data - Dados a serem atualizados
    */
-  updateModalidade: async (
-    id: number,
-    data: Partial<ModalidadeCreationAttributes>
-  ) => {
+  updateModalidade: async (id: number, data: Partial<ModalidadeAttributes>) => {
     const modalidade = await Modalidade.findByPk(id);
 
     if (!modalidade) {

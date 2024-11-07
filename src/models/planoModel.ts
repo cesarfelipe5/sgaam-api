@@ -1,4 +1,4 @@
-import { DataTypes, Model } from "sequelize";
+import { DataTypes, Model, Optional } from "sequelize";
 import { sequelize } from "../config/db";
 import { Aluno } from "./alunoModel";
 import { Modalidade } from "./modalidadeModel";
@@ -16,6 +16,9 @@ export interface PlanoAttributes {
   createdAt?: Date;
   updatedAt?: Date;
 }
+
+export interface PlanoCreationAttributes
+  extends Optional<PlanoAttributes, "id" | "createdAt" | "updatedAt"> {}
 
 export class Plano extends Model<PlanoAttributes> {
   static associate() {

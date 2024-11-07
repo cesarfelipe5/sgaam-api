@@ -1,4 +1,4 @@
-import { DataTypes, Model } from "sequelize";
+import { DataTypes, Model, Optional } from "sequelize";
 import { sequelize } from "../config/db";
 import { Usuario } from "./usuarioModel";
 import { UsuarioPermissao } from "./usuarioPermissaoModel";
@@ -11,6 +11,10 @@ export interface PermissaoAttributes {
   createdAt?: Date;
   updatedAt?: Date;
 }
+
+// Interface para os atributos de criação do Aluno (sem o id, createdAt, updatedAt)
+export interface PermissaoCreationAttributes
+  extends Optional<PermissaoAttributes, "id" | "createdAt" | "updatedAt"> {}
 
 export class Permissao extends Model<PermissaoAttributes> {
   static associate() {

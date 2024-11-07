@@ -1,4 +1,4 @@
-import { DataTypes, Model } from "sequelize";
+import { DataTypes, Model, Optional } from "sequelize";
 import { sequelize } from "../config/db";
 
 // Interface para os atributos do Aluno
@@ -9,6 +9,13 @@ export interface PlanoModalidadeAttributes {
   createdAt?: Date;
   updatedAt?: Date;
 }
+
+// Interface para os atributos de criação do Aluno (sem o id, createdAt, updatedAt)
+export interface PlanoModalidadeCreationAttributes
+  extends Optional<
+    PlanoModalidadeAttributes,
+    "id" | "createdAt" | "updatedAt"
+  > {}
 
 export class PlanoModalidade extends Model<PlanoModalidadeAttributes> {}
 

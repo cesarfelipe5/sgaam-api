@@ -1,4 +1,4 @@
-import { DataTypes, Model } from "sequelize";
+import { DataTypes, Model, Optional } from "sequelize";
 import { sequelize } from "../config/db";
 import { Pagamento } from "./pagamentoModel";
 
@@ -9,6 +9,13 @@ export interface FormaPagamentoAttributes {
   createdAt?: Date;
   updatedAt?: Date;
 }
+
+// Interface para os atributos de criação do Aluno (sem o id, createdAt, updatedAt)
+export interface FormaPagamentoCreationAttributes
+  extends Optional<
+    FormaPagamentoAttributes,
+    "id" | "createdAt" | "updatedAt"
+  > {}
 
 export class FormaPagamento extends Model<FormaPagamentoAttributes> {
   static associate() {
