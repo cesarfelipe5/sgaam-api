@@ -1,9 +1,12 @@
-import { DataTypes, Model, Optional } from "sequelize";
+import { DataTypes, Model } from "sequelize";
 import { sequelize } from "../config/db";
+import { PlanoAluno } from "./planoAlunoModel";
+import { Plano } from "./planoModel";
+import { Telefone } from "./telefoneModel";
 
 // Interface para os atributos do Aluno
 export interface AlunoAttributes {
-  id: number;
+  id?: number;
   nome: string;
   cpf: string;
   rg: string;
@@ -18,22 +21,21 @@ export interface AlunoAttributes {
 }
 
 // Interface para os atributos de criação do Aluno (sem o id, createdAt, updatedAt)
-export interface AlunoCreationAttributes
-  extends Optional<AlunoAttributes, "id" | "createdAt" | "updatedAt"> {}
 
-export class Aluno extends Model<AlunoAttributes, AlunoCreationAttributes> {
-  public id!: number;
-  public nome!: string;
-  public cpf!: string;
-  public rg!: string;
-  public cidade!: string;
-  public cep!: string;
-  public uf!: string;
-  public numero!: string;
-  public bairro!: string;
-  public logradouro!: string;
-  public readonly createdAt!: Date;
-  public readonly updatedAt!: Date;
+export class Aluno extends Model<AlunoAttributes> {
+  static associate = () => {
+    Aluno.hasMany(Telefone, {
+      foreignKey: "idAluno",
+      as: "telefones",
+    });
+
+    Aluno.belongsToMany(Plano, {
+      through: PlanoAluno,
+      foreignKey: "idAluno",
+      otherKey: "idPlano",
+      as: "planos",
+    });
+  };
 }
 
 Aluno.init(
@@ -82,7 +84,7 @@ Aluno.init(
   },
   {
     sequelize,
-    tableName: "alunos",
+    tableName: "Alunos",
     timestamps: true,
   }
 );

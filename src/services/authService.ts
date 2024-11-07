@@ -1,5 +1,5 @@
 import bcrypt from "bcryptjs";
-import { User } from "../models/authModel"; // Importe o modelo User do Sequelize
+import { Usuario } from "../models/usuarioModel"; // Importe o modelo User do Sequelize
 
 interface CreateUserProps {
   nome: string;
@@ -23,7 +23,7 @@ export const authService = {
     const hashedPassword = await bcrypt.hash(senha, 10);
 
     // Usa diretamente o Sequelize para criar um novo usuário
-    return await User.create({
+    return await Usuario.create({
       nome,
       email,
       senha: hashedPassword,
@@ -36,6 +36,6 @@ export const authService = {
    */
   async findUserByUsername({ email }: FindUserByUsernameProps) {
     // Usa diretamente o Sequelize para encontrar o usuário
-    return await User.findOne({ where: { email } });
+    return await Usuario.findOne({ where: { email } });
   },
 };

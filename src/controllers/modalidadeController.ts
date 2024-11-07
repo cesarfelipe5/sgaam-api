@@ -37,7 +37,7 @@ export const modalidadeController = {
       return sendResponse({
         res,
         status: 200,
-        message: "Alunos listados com sucesso!",
+        message: "Modalidades listadas com sucesso!",
         data: modalidades,
         pagination: {
           currentPage,
@@ -49,7 +49,7 @@ export const modalidadeController = {
     } catch (error) {
       return sendResponse({
         res,
-        message: "Erro ao listar alunos.",
+        message: "Erro ao listar as modalidades.",
         error,
       });
     }
@@ -59,13 +59,13 @@ export const modalidadeController = {
     try {
       const { id } = req.params;
 
-      const aluno = await modalidadeService.findModalidadeById(Number(id));
+      const modalidade = await modalidadeService.findModalidadeById(Number(id));
 
       return sendResponse({
         res,
         status: 200,
         message: "Modalidade encontrado com sucesso!",
-        data: aluno,
+        data: modalidade,
       });
     } catch (error) {
       return sendResponse({
@@ -80,7 +80,7 @@ export const modalidadeController = {
     try {
       const { nome, descricao, status, valor } = req.body;
 
-      const aluno = await modalidadeService.createModalidade({
+      const modalidade = await modalidadeService.createModalidade({
         nome,
         descricao,
         status,
@@ -91,7 +91,7 @@ export const modalidadeController = {
         res,
         status: 201,
         message: "Modalidade criada com sucesso!",
-        data: aluno,
+        data: modalidade,
       });
     } catch (error: unknown) {
       return sendResponse({
@@ -108,7 +108,7 @@ export const modalidadeController = {
 
       const updatedData = req.body;
 
-      const aluno = await modalidadeService.updateModalidade(
+      const modalidade = await modalidadeService.updateModalidade(
         Number(id),
         updatedData
       );
@@ -117,7 +117,7 @@ export const modalidadeController = {
         res,
         status: 200,
         message: "Modalidade atualizada com sucesso!",
-        data: aluno,
+        data: modalidade,
       });
     } catch (error) {
       return sendResponse({

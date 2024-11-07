@@ -1,9 +1,11 @@
-import { DataTypes, Model, Optional } from "sequelize";
+import { DataTypes, Model } from "sequelize";
 import { sequelize } from "../config/db";
+import { PlanoModalidade } from "./planoModalidadeModel";
+import { Plano } from "./planoModel";
 
 // Interface para os atributos do Aluno
 export interface ModalidadeAttributes {
-  id: number;
+  id?: number;
   nome: string;
   descricao: string;
   status: string;
@@ -12,21 +14,15 @@ export interface ModalidadeAttributes {
   updatedAt?: Date;
 }
 
-// Interface para os atributos de criação do Aluno (sem o id, createdAt, updatedAt)
-export interface ModalidadeCreationAttributes
-  extends Optional<ModalidadeAttributes, "id" | "createdAt" | "updatedAt"> {}
-
-export class Modalidade extends Model<
-  ModalidadeAttributes,
-  ModalidadeCreationAttributes
-> {
-  public id!: number;
-  public nome!: string;
-  public descricao!: string;
-  public status!: string;
-  public valor!: number;
-  public readonly createdAt!: Date;
-  public readonly updatedAt!: Date;
+export class Modalidade extends Model<ModalidadeAttributes> {
+  static associate() {
+    Modalidade.belongsToMany(Plano, {
+      through: PlanoModalidade,
+      foreignKey: "idModalidade",
+      otherKey: "idPlano",
+      as: "planos",
+    });
+  }
 }
 
 Modalidade.init(
@@ -56,7 +52,7 @@ Modalidade.init(
   },
   {
     sequelize,
-    tableName: "modalidades",
+    tableName: "Modalidades",
     timestamps: true,
   }
 );
