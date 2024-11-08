@@ -4,7 +4,7 @@ import { Pagamento } from "./pagamentoModel";
 
 // Interface para os atributos do Aluno
 export interface FormaPagamentoAttributes {
-  id?: number;
+  id: number;
   nome: string;
   createdAt?: Date;
   updatedAt?: Date;
@@ -17,7 +17,15 @@ export interface FormaPagamentoCreationAttributes
     "id" | "createdAt" | "updatedAt"
   > {}
 
-export class FormaPagamento extends Model<FormaPagamentoAttributes> {
+export class FormaPagamento
+  extends Model<FormaPagamentoAttributes, FormaPagamentoCreationAttributes>
+  implements FormaPagamentoAttributes
+{
+  public id!: number;
+  public nome!: string;
+  public readonly createdAt?: Date;
+  public readonly updatedAt?: Date;
+
   static associate() {
     FormaPagamento.hasMany(Pagamento, {
       foreignKey: "idFormaPagamento",

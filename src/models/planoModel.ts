@@ -7,7 +7,7 @@ import { PlanoModalidade } from "./planoModalidadeModel";
 
 // Interface para os atributos do Aluno
 export interface PlanoAttributes {
-  id?: number;
+  id: number;
   nome: string;
   descricao: string;
   inicioVigencia: Date;
@@ -20,7 +20,19 @@ export interface PlanoAttributes {
 export interface PlanoCreationAttributes
   extends Optional<PlanoAttributes, "id" | "createdAt" | "updatedAt"> {}
 
-export class Plano extends Model<PlanoAttributes> {
+export class Plano
+  extends Model<PlanoAttributes, PlanoCreationAttributes>
+  implements PlanoAttributes
+{
+  public id!: number;
+  public nome!: string;
+  public descricao!: string;
+  public inicioVigencia!: Date;
+  public fimVigencia!: Date;
+  public precoPadrao!: Date;
+  public readonly createdAt?: Date;
+  public readonly updatedAt?: Date;
+
   static associate() {
     Plano.belongsToMany(Aluno, {
       through: PlanoAluno,

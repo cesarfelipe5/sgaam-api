@@ -5,7 +5,7 @@ import { Usuario } from "./usuarioModel";
 
 // Interface para os atributos do Aluno
 export interface UsuarioPermissaoAttributes {
-  id?: number;
+  id: number;
   idUsuario: number;
   idPermissao: number;
   createdAt?: Date;
@@ -18,7 +18,16 @@ export interface UsuarioPermissaoCreationAttributes
     "id" | "createdAt" | "updatedAt"
   > {}
 
-export class UsuarioPermissao extends Model<UsuarioPermissaoAttributes> {
+export class UsuarioPermissao
+  extends Model<UsuarioPermissaoAttributes, UsuarioPermissaoAttributes>
+  implements UsuarioPermissaoAttributes
+{
+  public id!: number;
+  public idUsuario!: number;
+  public idPermissao!: number;
+  public readonly createdAt?: Date;
+  public readonly updatedAt?: Date;
+
   static associate() {
     UsuarioPermissao.belongsTo(Permissao, {
       foreignKey: "idPermissao",

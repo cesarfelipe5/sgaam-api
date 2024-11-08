@@ -5,7 +5,7 @@ import { Plano } from "./planoModel";
 
 // Interface para os atributos do Aluno
 export interface ModalidadeAttributes {
-  id?: number;
+  id: number;
   nome: string;
   descricao: string;
   status: string;
@@ -17,7 +17,18 @@ export interface ModalidadeAttributes {
 export interface ModalidadeCreationAttributes
   extends Optional<ModalidadeAttributes, "id" | "createdAt" | "updatedAt"> {}
 
-export class Modalidade extends Model<ModalidadeAttributes> {
+export class Modalidade
+  extends Model<ModalidadeAttributes, ModalidadeCreationAttributes>
+  implements ModalidadeAttributes
+{
+  public id!: number;
+  public nome!: string;
+  public descricao!: string;
+  public status!: string;
+  public valor!: number;
+  public readonly createdAt?: Date;
+  public readonly updatedAt?: Date;
+
   static associate() {
     Modalidade.belongsToMany(Plano, {
       through: PlanoModalidade,

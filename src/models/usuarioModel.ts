@@ -5,7 +5,7 @@ import { Permissao } from "./permissaoModel";
 import { UsuarioPermissao } from "./usuarioPermissaoModel";
 
 export interface UsuarioAttributes {
-  id?: number;
+  id: number;
   nome: string;
   email: string;
   senha: string;

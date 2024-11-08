@@ -3,7 +3,7 @@ import { sequelize } from "../config/db";
 import { Aluno } from "./alunoModel";
 
 export interface TelefoneAttributes {
-  id?: number;
+  id: number;
   numero: string;
   tipo: "Comercial" | "Residencial" | "Celular";
   idAluno: number;
@@ -14,10 +14,17 @@ export interface TelefoneAttributes {
 export interface TelefoneCreationAttributes
   extends Optional<TelefoneAttributes, "id" | "createdAt" | "updatedAt"> {}
 
-export class Telefone extends Model<
-  TelefoneAttributes,
-  TelefoneCreationAttributes
-> {
+export class Telefone
+  extends Model<TelefoneAttributes, TelefoneCreationAttributes>
+  implements TelefoneAttributes
+{
+  public id!: number;
+  public numero!: string;
+  public tipo!: "Comercial" | "Residencial" | "Celular";
+  public idAluno!: number;
+  public readonly createdAt?: Date;
+  public readonly updatedAt?: Date;
+
   // Define a associação com o modelo Aluno
   static associate = () => {
     Telefone.belongsTo(Aluno, {

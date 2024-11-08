@@ -6,7 +6,7 @@ import { Plano } from "./planoModel";
 
 // Interface para os atributos do Aluno
 export interface PlanoAlunoAttributes {
-  id?: number;
+  id: number;
   nome: string;
   isExperimental: boolean;
   idAluno: number;
@@ -19,7 +19,18 @@ export interface PlanoAlunoAttributes {
 export interface PlanoAlunoCreationAttributes
   extends Optional<PlanoAlunoAttributes, "id" | "createdAt" | "updatedAt"> {}
 
-export class PlanoAluno extends Model<PlanoAlunoAttributes> {
+export class PlanoAluno
+  extends Model<PlanoAlunoAttributes, PlanoAlunoCreationAttributes>
+  implements PlanoAlunoAttributes
+{
+  public id!: number;
+  public nome!: string;
+  public isExperimental!: boolean;
+  public idAluno!: number;
+  public idPlano!: number;
+  public readonly createdAt?: Date;
+  public readonly updatedAt?: Date;
+
   // Método para definir associações
   static associate() {
     PlanoAluno.belongsTo(Aluno, {

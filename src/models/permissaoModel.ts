@@ -5,7 +5,7 @@ import { UsuarioPermissao } from "./usuarioPermissaoModel";
 
 // Interface para os atributos do Aluno
 export interface PermissaoAttributes {
-  id?: number;
+  id: number;
   nome: string;
   descricao: string;
   createdAt?: Date;
@@ -16,7 +16,16 @@ export interface PermissaoAttributes {
 export interface PermissaoCreationAttributes
   extends Optional<PermissaoAttributes, "id" | "createdAt" | "updatedAt"> {}
 
-export class Permissao extends Model<PermissaoAttributes> {
+export class Permissao
+  extends Model<PermissaoAttributes, PermissaoCreationAttributes>
+  implements PermissaoAttributes
+{
+  public id!: number;
+  public nome!: string;
+  public descricao!: string;
+  public readonly createdAt?: Date;
+  public readonly updatedAt?: Date;
+
   static associate() {
     Permissao.belongsToMany(Usuario, {
       through: UsuarioPermissao,

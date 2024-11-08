@@ -1,11 +1,5 @@
 import bcrypt from "bcryptjs";
-import { Usuario } from "../models/usuarioModel"; // Importe o modelo User do Sequelize
-
-interface CreateUserProps {
-  nome: string;
-  email: string;
-  senha: string;
-}
+import { Usuario, UsuarioCreationAttributes } from "../models/usuarioModel"; // Importe o modelo User do Sequelize
 
 interface FindUserByUsernameProps {
   email: string;
@@ -18,7 +12,7 @@ export const authService = {
    * @param email - Email do usuário
    * @param senha - Senha do usuário (em plain text)
    */
-  async createUser({ nome, email, senha }: CreateUserProps) {
+  async createUser({ nome, email, senha }: UsuarioCreationAttributes) {
     // Criptografa a senha antes de salvar no banco de dados
     const hashedPassword = await bcrypt.hash(senha, 10);
 

@@ -3,7 +3,7 @@ import { sequelize } from "../config/db";
 
 // Interface para os atributos do Aluno
 export interface PlanoModalidadeAttributes {
-  id?: number;
+  id: number;
   idModalidade: number;
   idPlano: number;
   createdAt?: Date;
@@ -17,7 +17,16 @@ export interface PlanoModalidadeCreationAttributes
     "id" | "createdAt" | "updatedAt"
   > {}
 
-export class PlanoModalidade extends Model<PlanoModalidadeAttributes> {}
+export class PlanoModalidade
+  extends Model<PlanoModalidadeAttributes, PlanoModalidadeCreationAttributes>
+  implements PlanoModalidadeAttributes
+{
+  public id!: number;
+  public idModalidade!: number;
+  public idPlano!: number;
+  public readonly createdAt?: Date;
+  public readonly updatedAt?: Date;
+}
 
 PlanoModalidade.init(
   {

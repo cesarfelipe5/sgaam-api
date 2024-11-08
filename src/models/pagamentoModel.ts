@@ -6,7 +6,7 @@ import { Usuario } from "./usuarioModel";
 
 // Interface para os atributos do Aluno
 export interface PagamentoAttributes {
-  id?: number;
+  id: number;
   dataPagamento: Date;
   valor: number;
   observacao: string;
@@ -23,7 +23,22 @@ export interface PagamentoAttributes {
 export interface PagamentoCreationAttributes
   extends Optional<PagamentoAttributes, "id" | "createdAt" | "updatedAt"> {}
 
-export class Pagamento extends Model<PagamentoAttributes> {
+export class Pagamento
+  extends Model<PagamentoAttributes, PagamentoCreationAttributes>
+  implements PagamentoAttributes
+{
+  public id!: number;
+  public dataPagamento!: Date;
+  public valor!: number;
+  public observacao!: string;
+  public dataVencimento!: Date;
+  public pago!: boolean;
+  public idUsuario!: number;
+  public idPlanoAluno!: number;
+  public idFormaPagamento!: number;
+  public readonly createdAt?: Date;
+  public readonly updatedAt?: Date;
+
   static associate() {
     Pagamento.belongsTo(Usuario, {
       foreignKey: "idUsuario",
