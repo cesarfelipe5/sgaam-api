@@ -1,13 +1,12 @@
 import { Request, Response } from "express";
-import { Telefone } from "../models";
-import { alunoService } from "../services";
+import { usuarioService } from "../services";
 import { sendResponse } from "../utils/responseHamdler";
 
-export const alunoController = {
+export const usuarioController = {
   listOrSearch: async (req: Request, res: Response) => {
     try {
-      let alunos;
-      let totalAlunos;
+      let usuarios;
+      let totalUsuario;
 
       const { nome } = req.query;
       const perPage = Number(req.query.perPage as string) || 10;
@@ -15,42 +14,42 @@ export const alunoController = {
       const offset = (currentPage - 1) * perPage;
 
       if (nome) {
-        const { rows, count } = await alunoService.searchAlunos({
+        const { rows, count } = await usuarioService.searchUsuario({
           nome: nome as string,
           limit: perPage,
           offset,
         });
 
-        alunos = rows;
-        totalAlunos = count;
+        usuarios = rows;
+        totalUsuario = count;
       } else {
-        const { rows, count } = await alunoService.listAlunos({
+        const { rows, count } = await usuarioService.listUsuarios({
           limit: perPage,
           offset,
         });
 
-        alunos = rows;
-        totalAlunos = count;
+        usuarios = rows;
+        totalUsuario = count;
       }
 
-      const totalPages = Math.ceil(totalAlunos / perPage);
+      const totalPages = Math.ceil(totalUsuario / perPage);
 
       return sendResponse({
         res,
         status: 200,
-        message: "Alunos listados com sucesso!",
-        data: alunos,
+        message: "Usuarios listados com sucesso!",
+        data: usuarios,
         pagination: {
           currentPage,
           perPage,
           totalPages,
-          total: totalAlunos,
+          total: totalUsuario,
         },
       });
     } catch (error) {
       return sendResponse({
         res,
-        message: "Erro ao listar alunos.",
+        message: "Erro ao listar usuarios.",
         error,
       });
     }
@@ -60,18 +59,18 @@ export const alunoController = {
     try {
       const { id } = req.params;
 
-      const aluno = await alunoService.findAlunoById(Number(id));
+      const usuario = await usuarioService.findUsuarioById(Number(id));
 
       return sendResponse({
         res,
         status: 200,
-        message: "Aluno encontrado com sucesso!",
-        data: aluno,
+        message: "Usuario encontrado com sucesso!",
+        data: usuario,
       });
     } catch (error) {
       return sendResponse({
         res,
-        message: "Houve um erro ao buscar o aluno.",
+        message: "Houve um erro buscar o usuario.",
         error,
       });
     }
@@ -79,50 +78,24 @@ export const alunoController = {
 
   create: async (req: Request, res: Response) => {
     try {
-      const {
-        nome,
-        cpf,
-        rg,
-        uf,
-        cidade,
-        cep,
-        numero,
-        bairro,
-        logradouro,
-        telefones,
-      } = req.body;
+      const { nome, email, senha } = req.body;
 
-      const aluno = await alunoService.createAluno({
+      const usuario = await usuarioService.createUsuario({
         nome,
-        cpf,
-        rg,
-        uf,
-        cidade,
-        cep,
-        numero,
-        bairro,
-        logradouro,
+        email,
+        senha,
       });
-
-      await Telefone.bulkCreate(
-        telefones.map((telefone: { tipo: string; numero: string }) => ({
-          ...telefone,
-          idAluno: aluno.id,
-        }))
-      );
-
-      const alunoComTelefones = await alunoService.findAlunoById(aluno.id);
 
       return sendResponse({
         res,
         status: 201,
-        message: "Aluno criado com sucesso!",
-        data: alunoComTelefones,
+        message: "Usuario criado com sucesso!",
+        data: usuario,
       });
     } catch (error: unknown) {
       return sendResponse({
         res,
-        message: "Houve um erro na criação do aluno.",
+        message: "Houve um erro na criação do usuario.",
         error,
       });
     }
@@ -134,18 +107,21 @@ export const alunoController = {
 
       const updatedData = req.body;
 
-      const aluno = await alunoService.updateAluno(Number(id), updatedData);
+      const usuario = await usuarioService.updateUsuario(
+        Number(id),
+        updatedData
+      );
 
       return sendResponse({
         res,
         status: 200,
-        message: "Aluno atualizado com sucesso!",
-        data: aluno,
+        message: "Usuario atualizado com sucesso!",
+        data: usuario,
       });
     } catch (error) {
       return sendResponse({
         res,
-        message: "Erro ao atualizar o aluno.",
+        message: "Erro ao atualizar o usuario.",
         error,
       });
     }
@@ -155,17 +131,17 @@ export const alunoController = {
     try {
       const { id } = req.params;
 
-      await alunoService.deleteAluno(Number(id));
+      await usuarioService.deleteUsuario(Number(id));
 
       return sendResponse({
         res,
         status: 200,
-        message: "Aluno removido com sucesso!",
+        message: "Usuario removido com sucesso!",
       });
     } catch (error) {
       return sendResponse({
         res,
-        message: "Erro ao remover aluno.",
+        message: "Erro ao remover o usuario.",
         error,
       });
     }

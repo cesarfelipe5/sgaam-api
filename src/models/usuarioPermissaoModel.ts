@@ -1,5 +1,4 @@
-import { DataTypes, Model, Optional } from "sequelize";
-import { sequelize } from "../config/db";
+import { DataTypes, Model, Optional, Sequelize } from "sequelize";
 import { Permissao } from "./permissaoModel";
 import { Usuario } from "./usuarioModel";
 
@@ -19,7 +18,7 @@ export interface UsuarioPermissaoCreationAttributes
   > {}
 
 export class UsuarioPermissao
-  extends Model<UsuarioPermissaoAttributes, UsuarioPermissaoAttributes>
+  extends Model<UsuarioPermissaoAttributes, UsuarioPermissaoCreationAttributes>
   implements UsuarioPermissaoAttributes
 {
   public id!: number;
@@ -27,6 +26,34 @@ export class UsuarioPermissao
   public idPermissao!: number;
   public readonly createdAt?: Date;
   public readonly updatedAt?: Date;
+
+  public static initModel(sequelize: Sequelize): typeof UsuarioPermissao {
+    UsuarioPermissao.init(
+      {
+        id: {
+          type: DataTypes.INTEGER.UNSIGNED,
+          autoIncrement: true,
+          primaryKey: true,
+        },
+
+        idPermissao: {
+          type: DataTypes.NUMBER,
+          allowNull: false,
+        },
+        idUsuario: {
+          type: DataTypes.NUMBER,
+          allowNull: false,
+        },
+      },
+      {
+        sequelize,
+        tableName: "UsuarioPermissoes",
+        timestamps: true,
+      }
+    );
+
+    return UsuarioPermissao;
+  }
 
   static associate() {
     UsuarioPermissao.belongsTo(Permissao, {
@@ -40,27 +67,3 @@ export class UsuarioPermissao
     });
   }
 }
-
-UsuarioPermissao.init(
-  {
-    id: {
-      type: DataTypes.INTEGER.UNSIGNED,
-      autoIncrement: true,
-      primaryKey: true,
-    },
-
-    idPermissao: {
-      type: DataTypes.NUMBER,
-      allowNull: false,
-    },
-    idUsuario: {
-      type: DataTypes.NUMBER,
-      allowNull: false,
-    },
-  },
-  {
-    sequelize,
-    tableName: "UsuarioPermissoes",
-    timestamps: true,
-  }
-);

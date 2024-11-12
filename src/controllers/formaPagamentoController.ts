@@ -1,58 +1,58 @@
 import { Request, Response } from "express";
-import { modalidadeService } from "../services";
+import { formaPagamentoService } from "../services";
 import { sendResponse } from "../utils/responseHamdler";
 
-export const modalidadeController = {
+export const formaPagamentoController = {
   listOrSearch: async (req: Request, res: Response) => {
     try {
-      let modalidades;
-      let totalModalidades;
+      let formaPagamentos;
+      let totalFormaPagamento;
 
       const { nome } = req.query;
       const perPage = Number(req.query.perPage as string) || 10;
-
       const currentPage = Number(req.query.currentPage as string) || 1;
-
       const offset = (currentPage - 1) * perPage;
 
       if (nome) {
-        const { rows, count } = await modalidadeService.searchModalidade({
-          nome: nome as string,
-          limit: perPage,
-          offset,
-        });
+        const { rows, count } =
+          await formaPagamentoService.searchFormaPagamento({
+            nome: nome as string,
+            limit: perPage,
+            offset,
+          });
 
-        modalidades = rows;
-
-        totalModalidades = count;
+        formaPagamentos = rows;
+        totalFormaPagamento = count;
       } else {
-        const { rows, count } = await modalidadeService.listModalidade({
-          limit: perPage,
-          offset,
-        });
+        const { rows, count } = await formaPagamentoService.listFormaPagamentos(
+          {
+            limit: perPage,
+            offset,
+          }
+        );
 
-        modalidades = rows;
-        totalModalidades = count;
+        formaPagamentos = rows;
+        totalFormaPagamento = count;
       }
 
-      const totalPages = Math.ceil(totalModalidades / perPage);
+      const totalPages = Math.ceil(totalFormaPagamento / perPage);
 
       return sendResponse({
         res,
         status: 200,
-        message: "Modalidades listadas com sucesso!",
-        data: modalidades,
+        message: "Formas de pagamento listados com sucesso!",
+        data: formaPagamentos,
         pagination: {
           currentPage,
           perPage,
           totalPages,
-          total: totalModalidades,
+          total: totalFormaPagamento,
         },
       });
     } catch (error) {
       return sendResponse({
         res,
-        message: "Erro ao listar as modalidades.",
+        message: "Erro ao listar as forma de pagamento.",
         error,
       });
     }
@@ -62,18 +62,20 @@ export const modalidadeController = {
     try {
       const { id } = req.params;
 
-      const modalidade = await modalidadeService.findModalidadeById(Number(id));
+      const formaPagamento = await formaPagamentoService.findFormaPagamentoById(
+        Number(id)
+      );
 
       return sendResponse({
         res,
         status: 200,
-        message: "Modalidade encontrado com sucesso!",
-        data: modalidade,
+        message: "Forma de pagamento encontrado com sucesso!",
+        data: formaPagamento,
       });
     } catch (error) {
       return sendResponse({
         res,
-        message: "Houve um buscar a modalidade.",
+        message: "Houve um erro buscar a forma de pagamento.",
         error,
       });
     }
@@ -81,24 +83,22 @@ export const modalidadeController = {
 
   create: async (req: Request, res: Response) => {
     try {
-      const { nome, descricao, valor } = req.body;
+      const { nome } = req.body;
 
-      const modalidade = await modalidadeService.createModalidade({
+      const formaPagamento = await formaPagamentoService.createFormaPagamento({
         nome,
-        descricao,
-        valor,
       });
 
       return sendResponse({
         res,
         status: 201,
-        message: "Modalidade criada com sucesso!",
-        data: modalidade,
+        message: "Forma de pagamento criado com sucesso!",
+        data: formaPagamento,
       });
     } catch (error: unknown) {
       return sendResponse({
         res,
-        message: "Houve um erro na criação da modalidade.",
+        message: "Houve um erro na criação de forma de pagamento.",
         error,
       });
     }
@@ -110,7 +110,7 @@ export const modalidadeController = {
 
       const updatedData = req.body;
 
-      const modalidade = await modalidadeService.updateModalidade(
+      const formaPagamento = await formaPagamentoService.updateFormaPagamento(
         Number(id),
         updatedData
       );
@@ -118,13 +118,13 @@ export const modalidadeController = {
       return sendResponse({
         res,
         status: 200,
-        message: "Modalidade atualizada com sucesso!",
-        data: modalidade,
+        message: "Forma de pagamento atualizado com sucesso!",
+        data: formaPagamento,
       });
     } catch (error) {
       return sendResponse({
         res,
-        message: "Erro ao atualizar a modalidade.",
+        message: "Erro ao atualizar a forma de pagamento.",
         error,
       });
     }
@@ -134,17 +134,17 @@ export const modalidadeController = {
     try {
       const { id } = req.params;
 
-      await modalidadeService.deleteModalidade(Number(id));
+      await formaPagamentoService.deleteFormaPagamento(Number(id));
 
       return sendResponse({
         res,
         status: 200,
-        message: "Modalidade deletada com sucesso!",
+        message: "Forma de pagamento removido com sucesso!",
       });
     } catch (error) {
       return sendResponse({
         res,
-        message: "Erro ao deletar modalidade.",
+        message: "Erro ao remover o forma de pagamento.",
         error,
       });
     }

@@ -1,5 +1,4 @@
-import { DataTypes, Model, Optional } from "sequelize";
-import { sequelize } from "../config/db";
+import { DataTypes, Model, Optional, Sequelize } from "sequelize";
 import { Aluno } from "./alunoModel";
 
 export interface TelefoneAttributes {
@@ -25,38 +24,40 @@ export class Telefone
   public readonly createdAt?: Date;
   public readonly updatedAt?: Date;
 
-  // Define a associação com o modelo Aluno
-  static associate = () => {
+  public static initModel(sequelize: Sequelize): typeof Telefone {
+    Telefone.init(
+      {
+        id: {
+          type: DataTypes.INTEGER.UNSIGNED,
+          autoIncrement: true,
+          primaryKey: true,
+        },
+        tipo: {
+          type: DataTypes.STRING,
+          allowNull: false,
+        },
+        numero: {
+          type: DataTypes.STRING,
+          allowNull: false,
+        },
+        idAluno: {
+          type: DataTypes.NUMBER,
+          allowNull: false,
+        },
+      },
+      {
+        sequelize,
+        tableName: "Telefones",
+        timestamps: true,
+      }
+    );
+    return Telefone;
+  }
+
+  public static associate() {
     Telefone.belongsTo(Aluno, {
       foreignKey: "idAluno",
       as: "aluno",
     });
-  };
-}
-
-Telefone.init(
-  {
-    id: {
-      type: DataTypes.INTEGER.UNSIGNED,
-      autoIncrement: true,
-      primaryKey: true,
-    },
-    tipo: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    numero: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    idAluno: {
-      type: DataTypes.NUMBER,
-      allowNull: false,
-    },
-  },
-  {
-    sequelize,
-    tableName: "Telefones",
-    timestamps: true,
   }
-);
+}

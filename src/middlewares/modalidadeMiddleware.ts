@@ -28,6 +28,7 @@ export const modalidadeMiddleware = {
     // Middleware de validação dos resultados
     handleValidationErrors,
   ],
+
   validateUpdate: [
     param("id")
       .notEmpty()

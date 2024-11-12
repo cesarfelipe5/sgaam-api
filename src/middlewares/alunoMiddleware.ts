@@ -12,7 +12,8 @@ export const alunoMiddleware = {
       .notEmpty()
       .withMessage("Nome é obrigatório")
       .isLength({ min: 2 })
-      .withMessage("Nome deve ter pelo menos 2 caracteres"),
+      .withMessage("Nome deve ter pelo menos 2 caracteres")
+      .custom(uniqueValidator({ service: alunoService, field: "nome" })),
 
     body("cpf")
       .notEmpty()
@@ -67,9 +68,33 @@ export const alunoMiddleware = {
       .isLength({ min: 2 })
       .withMessage("Logradouro deve ter pelo menos 2 caracteres"),
 
+    body("telefones")
+      .isArray({ min: 1 })
+      .withMessage("É necessário pelo menos um telefone")
+      .custom((telefones) => {
+        telefones.forEach((telefone: any) => {
+          if (
+            !["Comercial", "Residencial", "Celular"].includes(telefone.tipo)
+          ) {
+            throw new Error(
+              "O tipo de telefone deve ser Comercial, Residencial ou Celular"
+            );
+          }
+
+          if (!/^\d{10,11}$/.test(telefone.numero)) {
+            throw new Error(
+              "O número de telefone deve conter 10 ou 11 dígitos numéricos"
+            );
+          }
+        });
+
+        return true;
+      }),
+
     // Middleware de validação dos resultados
     handleValidationErrors,
   ],
+
   validateUpdate: [
     param("id")
       .notEmpty()
@@ -81,7 +106,8 @@ export const alunoMiddleware = {
     body("nome")
       .optional()
       .isLength({ min: 2 })
-      .withMessage("Nome deve ter pelo menos 2 caracteres"),
+      .withMessage("Nome deve ter pelo menos 2 caracteres")
+      .custom(uniqueValidator({ service: alunoService, field: "nome" })),
 
     body("cpf")
       .optional()
@@ -127,6 +153,29 @@ export const alunoMiddleware = {
       .optional()
       .isLength({ min: 2 })
       .withMessage("Logradouro deve ter pelo menos 2 caracteres"),
+
+    body("telefones")
+      .optional()
+      .isArray()
+      .withMessage("Telefones deve ser um array")
+      .custom((telefones) => {
+        telefones.forEach((telefone: any) => {
+          if (
+            !["Comercial", "Residencial", "Celular"].includes(telefone.tipo)
+          ) {
+            throw new Error(
+              "O tipo de telefone deve ser Comercial, Residencial ou Celular"
+            );
+          }
+
+          if (!/^\d{10,11}$/.test(telefone.numero)) {
+            throw new Error(
+              "O número de telefone deve conter 10 ou 11 dígitos numéricos"
+            );
+          }
+        });
+        return true;
+      }),
 
     // Middleware de validação dos resultados
     handleValidationErrors,

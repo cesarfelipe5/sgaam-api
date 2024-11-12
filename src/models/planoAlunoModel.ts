@@ -1,13 +1,10 @@
-import { DataTypes, Model, Optional } from "sequelize";
-import { sequelize } from "../config/db";
+import { DataTypes, Model, Optional, Sequelize } from "sequelize";
 import { Aluno } from "./alunoModel";
-import { FormaPagamento } from "./formaPagamentoModel";
 import { Plano } from "./planoModel";
 
 // Interface para os atributos do Aluno
 export interface PlanoAlunoAttributes {
   id: number;
-  nome: string;
   isExperimental: boolean;
   idAluno: number;
   idPlano: number;
@@ -24,12 +21,43 @@ export class PlanoAluno
   implements PlanoAlunoAttributes
 {
   public id!: number;
-  public nome!: string;
   public isExperimental!: boolean;
   public idAluno!: number;
   public idPlano!: number;
   public readonly createdAt?: Date;
   public readonly updatedAt?: Date;
+
+  public static initModel(sequelize: Sequelize): typeof PlanoAluno {
+    PlanoAluno.init(
+      {
+        id: {
+          type: DataTypes.INTEGER.UNSIGNED,
+          autoIncrement: true,
+          primaryKey: true,
+        },
+        isExperimental: {
+          type: DataTypes.BOOLEAN,
+          allowNull: false,
+          defaultValue: false,
+        },
+        idAluno: {
+          type: DataTypes.NUMBER,
+          allowNull: false,
+        },
+        idPlano: {
+          type: DataTypes.NUMBER,
+          allowNull: false,
+        },
+      },
+      {
+        sequelize,
+        tableName: "PlanoAlunos",
+        timestamps: true,
+      }
+    );
+
+    return PlanoAluno;
+  }
 
   // Método para definir associações
   static associate() {
@@ -42,42 +70,5 @@ export class PlanoAluno
       foreignKey: "idPlano",
       as: "plano",
     });
-
-    PlanoAluno.hasMany(FormaPagamento, {
-      foreignKey: "idPlanoAluno",
-      as: "pagamentos",
-    });
   }
 }
-
-PlanoAluno.init(
-  {
-    id: {
-      type: DataTypes.INTEGER.UNSIGNED,
-      autoIncrement: true,
-      primaryKey: true,
-    },
-    nome: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    isExperimental: {
-      type: DataTypes.BOOLEAN,
-      allowNull: false,
-      defaultValue: false,
-    },
-    idAluno: {
-      type: DataTypes.NUMBER,
-      allowNull: false,
-    },
-    idPlano: {
-      type: DataTypes.NUMBER,
-      allowNull: false,
-    },
-  },
-  {
-    sequelize,
-    tableName: "PlanoAlunos",
-    timestamps: true,
-  }
-);

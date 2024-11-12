@@ -1,5 +1,4 @@
-import { DataTypes, Model, Optional } from "sequelize";
-import { sequelize } from "../config/db";
+import { DataTypes, Model, Optional, Sequelize } from "sequelize";
 import { FormaPagamento } from "./formaPagamentoModel";
 import { PlanoAluno } from "./planoAlunoModel";
 import { Usuario } from "./usuarioModel";
@@ -39,67 +38,70 @@ export class Pagamento
   public readonly createdAt?: Date;
   public readonly updatedAt?: Date;
 
+  public static initModel(sequelize: Sequelize): typeof Pagamento {
+    Pagamento.init(
+      {
+        id: {
+          type: DataTypes.INTEGER.UNSIGNED,
+          autoIncrement: true,
+          primaryKey: true,
+        },
+        dataPagamento: {
+          type: DataTypes.DATE,
+          allowNull: false,
+        },
+        valor: {
+          type: DataTypes.DECIMAL(15, 2),
+          allowNull: false,
+        },
+        observacao: {
+          type: DataTypes.STRING,
+        },
+        dataVencimento: {
+          type: DataTypes.DATE,
+          allowNull: false,
+        },
+        pago: {
+          type: DataTypes.BOOLEAN,
+          allowNull: false,
+        },
+        idUsuario: {
+          type: DataTypes.INTEGER,
+          allowNull: false,
+        },
+        idPlanoAluno: {
+          type: DataTypes.INTEGER,
+          allowNull: false,
+        },
+        idFormaPagamento: {
+          type: DataTypes.INTEGER,
+          allowNull: false,
+        },
+      },
+      {
+        sequelize,
+        tableName: "Pagamentos",
+        timestamps: true,
+      }
+    );
+
+    return Pagamento;
+  }
+
   static associate() {
     Pagamento.belongsTo(Usuario, {
       foreignKey: "idUsuario",
-      as: "usuario",
+      as: "usuarios",
     });
 
     Pagamento.belongsTo(PlanoAluno, {
       foreignKey: "idPlanoAluno",
-      as: "planoAluno",
+      as: "planoAlunos",
     });
 
     Pagamento.belongsTo(FormaPagamento, {
       foreignKey: "idFormaPagamento",
-      as: "formaDePagamento",
+      as: "formaPagamentos",
     });
   }
 }
-
-Pagamento.init(
-  {
-    id: {
-      type: DataTypes.INTEGER.UNSIGNED,
-      autoIncrement: true,
-      primaryKey: true,
-    },
-    dataPagamento: {
-      type: DataTypes.DATE,
-      allowNull: false,
-    },
-    valor: {
-      type: DataTypes.DECIMAL(15, 2),
-      allowNull: false,
-    },
-    observacao: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    dataVencimento: {
-      type: DataTypes.DATE,
-      allowNull: false,
-    },
-    pago: {
-      type: DataTypes.BOOLEAN,
-      allowNull: false,
-    },
-    idUsuario: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-    },
-    idPlanoAluno: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-    },
-    idFormaPagamento: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-    },
-  },
-  {
-    sequelize,
-    tableName: "Pagamentos",
-    timestamps: true,
-  }
-);

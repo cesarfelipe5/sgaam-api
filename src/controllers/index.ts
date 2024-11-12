@@ -1,4 +1,9 @@
 export { alunoController } from "./alunoController";
 export { authController } from "./authController";
+export { formaPagamentoController } from "./formaPagamentoController";
 export { modalidadeController } from "./modalidadeController";
-// export {} from "./profileController";
+export { pagamentoController } from "./pagamentoController";
+export { permissaoController } from "./permissaoController";
+export { planoController } from "./planoController";
+export { usuarioController } from "./usuarioController";
+export { usuarioPermissaoController } from "./usuarioPermissaoController";

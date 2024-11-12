@@ -1,11 +1,11 @@
-import { DataTypes, Model, Optional } from "sequelize";
-import { sequelize } from "../config/db";
+import { DataTypes, Model, Optional, Sequelize } from "sequelize";
 import { Pagamento } from "./pagamentoModel";
 
 // Interface para os atributos do Aluno
 export interface FormaPagamentoAttributes {
   id: number;
   nome: string;
+  isActive: boolean;
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -14,7 +14,7 @@ export interface FormaPagamentoAttributes {
 export interface FormaPagamentoCreationAttributes
   extends Optional<
     FormaPagamentoAttributes,
-    "id" | "createdAt" | "updatedAt"
+    "id" | "isActive" | "createdAt" | "updatedAt"
   > {}
 
 export class FormaPagamento
@@ -23,8 +23,37 @@ export class FormaPagamento
 {
   public id!: number;
   public nome!: string;
+  public isActive!: boolean;
   public readonly createdAt?: Date;
   public readonly updatedAt?: Date;
+
+  public static initModel(sequelize: Sequelize): typeof FormaPagamento {
+    FormaPagamento.init(
+      {
+        id: {
+          type: DataTypes.INTEGER.UNSIGNED,
+          autoIncrement: true,
+          primaryKey: true,
+        },
+        nome: {
+          type: DataTypes.STRING,
+          allowNull: false,
+        },
+        isActive: {
+          type: DataTypes.BOOLEAN,
+          defaultValue: true,
+          allowNull: false,
+        },
+      },
+      {
+        sequelize,
+        tableName: "FormaPagamentos",
+        timestamps: true,
+      }
+    );
+
+    return FormaPagamento;
+  }
 
   static associate() {
     FormaPagamento.hasMany(Pagamento, {
@@ -33,22 +62,3 @@ export class FormaPagamento
     });
   }
 }
-
-FormaPagamento.init(
-  {
-    id: {
-      type: DataTypes.INTEGER.UNSIGNED,
-      autoIncrement: true,
-      primaryKey: true,
-    },
-    nome: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-  },
-  {
-    sequelize,
-    tableName: "FormaPagamentos",
-    timestamps: true,
-  }
-);

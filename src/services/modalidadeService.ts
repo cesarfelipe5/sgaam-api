@@ -3,6 +3,7 @@ import {
   Modalidade,
   ModalidadeAttributes,
   ModalidadeCreationAttributes,
+  Plano,
 } from "../models";
 
 interface SearchModalidade {
@@ -17,7 +18,9 @@ export const modalidadeService = {
    * @param id - ID da modalidade
    */
   findModalidadeById: async (id: number) => {
-    const modalidade = await Modalidade.findByPk(id);
+    const modalidade = await Modalidade.findByPk(id, {
+      include: [{ model: Plano, as: "planos" }],
+    });
 
     if (!modalidade) {
       throw new Error("Modalidade não encontrada");
@@ -39,6 +42,7 @@ export const modalidadeService = {
     offset: number;
   }) => {
     const modalidade = await Modalidade.findAndCountAll({
+      include: [{ model: Plano, as: "planos" }],
       limit,
       offset,
     });

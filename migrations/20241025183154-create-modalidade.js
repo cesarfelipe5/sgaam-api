@@ -19,7 +19,7 @@ module.exports = {
         allowNull: false,
       },
       status: {
-        type: Sequelize.ENUM("ativo", "inativo"),
+        type: Sequelize.BOOLEAN,
         allowNull: false,
       },
       valor: {

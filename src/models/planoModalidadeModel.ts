@@ -1,5 +1,6 @@
-import { DataTypes, Model, Optional } from "sequelize";
-import { sequelize } from "../config/db";
+import { DataTypes, Model, Optional, Sequelize } from "sequelize";
+import { Modalidade } from "./modalidadeModel";
+import { Plano } from "./planoModel";
 
 // Interface para os atributos do Aluno
 export interface PlanoModalidadeAttributes {
@@ -26,27 +27,44 @@ export class PlanoModalidade
   public idPlano!: number;
   public readonly createdAt?: Date;
   public readonly updatedAt?: Date;
-}
 
-PlanoModalidade.init(
-  {
-    id: {
-      type: DataTypes.INTEGER.UNSIGNED,
-      autoIncrement: true,
-      primaryKey: true,
-    },
-    idModalidade: {
-      type: DataTypes.NUMBER,
-      allowNull: false,
-    },
-    idPlano: {
-      type: DataTypes.NUMBER,
-      allowNull: false,
-    },
-  },
-  {
-    sequelize,
-    tableName: "PlanoModalidades",
-    timestamps: true,
+  public static initModel(sequelize: Sequelize): typeof PlanoModalidade {
+    PlanoModalidade.init(
+      {
+        id: {
+          type: DataTypes.INTEGER.UNSIGNED,
+          autoIncrement: true,
+          primaryKey: true,
+        },
+        idModalidade: {
+          type: DataTypes.NUMBER,
+          allowNull: false,
+        },
+        idPlano: {
+          type: DataTypes.NUMBER,
+          allowNull: false,
+        },
+      },
+      {
+        sequelize,
+        tableName: "PlanoModalidades",
+        timestamps: true,
+      }
+    );
+
+    return PlanoModalidade;
   }
-);
+
+  // Método para definir associações
+  static associate() {
+    PlanoModalidade.belongsTo(Plano, {
+      foreignKey: "idPlano",
+      as: "plano",
+    });
+
+    PlanoModalidade.belongsTo(Modalidade, {
+      foreignKey: "idModalidade",
+      as: "modalidade",
+    });
+  }
+}

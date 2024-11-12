@@ -1,5 +1,4 @@
-import { DataTypes, Model, Optional } from "sequelize";
-import { sequelize } from "../config/db";
+import { DataTypes, Model, Optional, Sequelize } from "sequelize";
 import { Usuario } from "./usuarioModel";
 import { UsuarioPermissao } from "./usuarioPermissaoModel";
 
@@ -26,6 +25,32 @@ export class Permissao
   public readonly createdAt?: Date;
   public readonly updatedAt?: Date;
 
+  public static initModel(sequelize: Sequelize): typeof Permissao {
+    Permissao.init(
+      {
+        id: {
+          type: DataTypes.INTEGER.UNSIGNED,
+          autoIncrement: true,
+          primaryKey: true,
+        },
+        nome: {
+          type: DataTypes.STRING,
+          allowNull: false,
+        },
+        descricao: {
+          type: DataTypes.STRING,
+          allowNull: false,
+        },
+      },
+      {
+        sequelize,
+        tableName: "Permissoes",
+        timestamps: true,
+      }
+    );
+    return Permissao;
+  }
+
   static associate() {
     Permissao.belongsToMany(Usuario, {
       through: UsuarioPermissao,
@@ -35,26 +60,3 @@ export class Permissao
     });
   }
 }
-
-Permissao.init(
-  {
-    id: {
-      type: DataTypes.INTEGER.UNSIGNED,
-      autoIncrement: true,
-      primaryKey: true,
-    },
-    nome: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    descricao: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-  },
-  {
-    sequelize,
-    tableName: "Permissoes",
-    timestamps: true,
-  }
-);

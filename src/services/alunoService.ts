@@ -1,5 +1,5 @@
 import { Op } from "sequelize";
-import { Aluno, AlunoCreationAttributes } from "../models";
+import { Aluno, AlunoCreationAttributes, Plano, Telefone } from "../models";
 
 interface SearchAlunos {
   nome: string;
@@ -13,7 +13,12 @@ export const alunoService = {
    * @param id - ID do aluno
    */
   findAlunoById: async (id: number) => {
-    const aluno = await Aluno.findByPk(id);
+    const aluno = await Aluno.findByPk(id, {
+      include: [
+        { model: Telefone, as: "telefones" },
+        { model: Plano, as: "planos" },
+      ],
+    });
 
     if (!aluno) {
       throw new Error("Aluno não encontrado");
@@ -29,6 +34,17 @@ export const alunoService = {
    */
   listAlunos: async ({ limit, offset }: { limit: number; offset: number }) => {
     const alunos = await Aluno.findAndCountAll({
+      include: [
+        {
+          model: Telefone,
+          as: "telefones",
+        },
+        {
+          model: Plano,
+          as: "planos",
+          // through: { attributes: ["isExperimental"] },
+        },
+      ],
       limit,
       offset,
     });
@@ -42,7 +58,7 @@ export const alunoService = {
    */
   createAluno: async (data: AlunoCreationAttributes): Promise<Aluno> => {
     try {
-      const aluno = await Aluno.create(data, { logging: console.log });
+      const aluno = await Aluno.create(data);
       return aluno;
     } catch (error) {
       console.error("Erro ao criar aluno:", error);

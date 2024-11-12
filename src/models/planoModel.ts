@@ -1,5 +1,4 @@
-import { DataTypes, Model, Optional } from "sequelize";
-import { sequelize } from "../config/db";
+import { DataTypes, Model, Optional, Sequelize } from "sequelize";
 import { Aluno } from "./alunoModel";
 import { Modalidade } from "./modalidadeModel";
 import { PlanoAluno } from "./planoAlunoModel";
@@ -33,6 +32,45 @@ export class Plano
   public readonly createdAt?: Date;
   public readonly updatedAt?: Date;
 
+  public static initModel(sequelize: Sequelize): typeof Plano {
+    Plano.init(
+      {
+        id: {
+          type: DataTypes.INTEGER.UNSIGNED,
+          autoIncrement: true,
+          primaryKey: true,
+        },
+        nome: {
+          type: DataTypes.STRING,
+          allowNull: false,
+        },
+        descricao: {
+          type: DataTypes.TEXT,
+          allowNull: false,
+        },
+        inicioVigencia: {
+          type: DataTypes.DATE,
+          allowNull: false,
+        },
+        fimVigencia: {
+          type: DataTypes.DATE,
+          allowNull: false,
+        },
+        precoPadrao: {
+          type: DataTypes.DECIMAL,
+          allowNull: false,
+        },
+      },
+      {
+        sequelize,
+        tableName: "Planos",
+        timestamps: true,
+      }
+    );
+
+    return Plano;
+  }
+
   static associate() {
     Plano.belongsToMany(Aluno, {
       through: PlanoAluno,
@@ -49,38 +87,3 @@ export class Plano
     });
   }
 }
-
-Plano.init(
-  {
-    id: {
-      type: DataTypes.INTEGER.UNSIGNED,
-      autoIncrement: true,
-      primaryKey: true,
-    },
-    nome: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    descricao: {
-      type: DataTypes.TEXT,
-      allowNull: false,
-    },
-    inicioVigencia: {
-      type: DataTypes.DATE,
-      allowNull: false,
-    },
-    fimVigencia: {
-      type: DataTypes.DATE,
-      allowNull: false,
-    },
-    precoPadrao: {
-      type: DataTypes.DECIMAL,
-      allowNull: false,
-    },
-  },
-  {
-    sequelize,
-    tableName: "Planos",
-    timestamps: true,
-  }
-);

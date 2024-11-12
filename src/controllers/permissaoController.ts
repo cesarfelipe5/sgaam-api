@@ -1,13 +1,12 @@
 import { Request, Response } from "express";
-import { Telefone } from "../models";
-import { alunoService } from "../services";
+import { permissaoService } from "../services";
 import { sendResponse } from "../utils/responseHamdler";
 
-export const alunoController = {
+export const permissaoController = {
   listOrSearch: async (req: Request, res: Response) => {
     try {
-      let alunos;
-      let totalAlunos;
+      let permissoes;
+      let totalPermissoes;
 
       const { nome } = req.query;
       const perPage = Number(req.query.perPage as string) || 10;
@@ -15,42 +14,42 @@ export const alunoController = {
       const offset = (currentPage - 1) * perPage;
 
       if (nome) {
-        const { rows, count } = await alunoService.searchAlunos({
+        const { rows, count } = await permissaoService.searchPermissao({
           nome: nome as string,
           limit: perPage,
           offset,
         });
 
-        alunos = rows;
-        totalAlunos = count;
+        permissoes = rows;
+        totalPermissoes = count;
       } else {
-        const { rows, count } = await alunoService.listAlunos({
+        const { rows, count } = await permissaoService.listPermissao({
           limit: perPage,
           offset,
         });
 
-        alunos = rows;
-        totalAlunos = count;
+        permissoes = rows;
+        totalPermissoes = count;
       }
 
-      const totalPages = Math.ceil(totalAlunos / perPage);
+      const totalPages = Math.ceil(totalPermissoes / perPage);
 
       return sendResponse({
         res,
         status: 200,
-        message: "Alunos listados com sucesso!",
-        data: alunos,
+        message: "Permissões listados com sucesso!",
+        data: permissoes,
         pagination: {
           currentPage,
           perPage,
           totalPages,
-          total: totalAlunos,
+          total: totalPermissoes,
         },
       });
     } catch (error) {
       return sendResponse({
         res,
-        message: "Erro ao listar alunos.",
+        message: "Erro ao listar permissões.",
         error,
       });
     }
@@ -60,18 +59,18 @@ export const alunoController = {
     try {
       const { id } = req.params;
 
-      const aluno = await alunoService.findAlunoById(Number(id));
+      const permissao = await permissaoService.findPermissaoById(Number(id));
 
       return sendResponse({
         res,
         status: 200,
-        message: "Aluno encontrado com sucesso!",
-        data: aluno,
+        message: "Permissao encontrada com sucesso!",
+        data: permissao,
       });
     } catch (error) {
       return sendResponse({
         res,
-        message: "Houve um erro ao buscar o aluno.",
+        message: "Houve um erro buscar a permissao.",
         error,
       });
     }
@@ -79,50 +78,23 @@ export const alunoController = {
 
   create: async (req: Request, res: Response) => {
     try {
-      const {
-        nome,
-        cpf,
-        rg,
-        uf,
-        cidade,
-        cep,
-        numero,
-        bairro,
-        logradouro,
-        telefones,
-      } = req.body;
+      const { nome, descricao } = req.body;
 
-      const aluno = await alunoService.createAluno({
+      const permissao = await permissaoService.createPermissao({
         nome,
-        cpf,
-        rg,
-        uf,
-        cidade,
-        cep,
-        numero,
-        bairro,
-        logradouro,
+        descricao,
       });
-
-      await Telefone.bulkCreate(
-        telefones.map((telefone: { tipo: string; numero: string }) => ({
-          ...telefone,
-          idAluno: aluno.id,
-        }))
-      );
-
-      const alunoComTelefones = await alunoService.findAlunoById(aluno.id);
 
       return sendResponse({
         res,
         status: 201,
-        message: "Aluno criado com sucesso!",
-        data: alunoComTelefones,
+        message: "Permissao criada com sucesso!",
+        data: permissao,
       });
     } catch (error: unknown) {
       return sendResponse({
         res,
-        message: "Houve um erro na criação do aluno.",
+        message: "Houve um erro na criação da permissão.",
         error,
       });
     }
@@ -134,18 +106,21 @@ export const alunoController = {
 
       const updatedData = req.body;
 
-      const aluno = await alunoService.updateAluno(Number(id), updatedData);
+      const permissao = await permissaoService.updatePermissao(
+        Number(id),
+        updatedData
+      );
 
       return sendResponse({
         res,
         status: 200,
-        message: "Aluno atualizado com sucesso!",
-        data: aluno,
+        message: "Permissao atualizada com sucesso!",
+        data: permissao,
       });
     } catch (error) {
       return sendResponse({
         res,
-        message: "Erro ao atualizar o aluno.",
+        message: "Erro ao atualizar a permissão.",
         error,
       });
     }
@@ -155,17 +130,17 @@ export const alunoController = {
     try {
       const { id } = req.params;
 
-      await alunoService.deleteAluno(Number(id));
+      await permissaoService.deletePermissao(Number(id));
 
       return sendResponse({
         res,
         status: 200,
-        message: "Aluno removido com sucesso!",
+        message: "Permissão removida com sucesso!",
       });
     } catch (error) {
       return sendResponse({
         res,
-        message: "Erro ao remover aluno.",
+        message: "Erro ao remover permissão.",
         error,
       });
     }

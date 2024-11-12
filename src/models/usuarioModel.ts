@@ -1,5 +1,4 @@
-import { DataTypes, Model, Optional } from "sequelize";
-import { sequelize } from "../config/db"; // Importe a conexão do Sequelize
+import { DataTypes, Model, Optional, Sequelize } from "sequelize";
 import { Pagamento } from "./pagamentoModel";
 import { Permissao } from "./permissaoModel";
 import { UsuarioPermissao } from "./usuarioPermissaoModel";
@@ -27,6 +26,38 @@ export class Usuario
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;
 
+  public static initModel(sequelize: Sequelize): typeof Usuario {
+    Usuario.init(
+      {
+        id: {
+          type: DataTypes.INTEGER.UNSIGNED,
+          autoIncrement: true,
+          primaryKey: true,
+        },
+        nome: {
+          type: DataTypes.STRING,
+          allowNull: false,
+        },
+        email: {
+          type: DataTypes.STRING,
+          allowNull: false,
+          unique: true,
+        },
+        senha: {
+          type: DataTypes.STRING,
+          allowNull: false,
+        },
+      },
+      {
+        sequelize,
+        tableName: "Usuarios",
+        timestamps: true,
+      }
+    );
+
+    return Usuario;
+  }
+
   static associate() {
     Usuario.hasMany(Pagamento, {
       foreignKey: "idUsuario",
@@ -41,31 +72,3 @@ export class Usuario
     });
   }
 }
-
-Usuario.init(
-  {
-    id: {
-      type: DataTypes.INTEGER.UNSIGNED,
-      autoIncrement: true,
-      primaryKey: true,
-    },
-    nome: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    email: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      unique: true,
-    },
-    senha: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-  },
-  {
-    sequelize,
-    tableName: "Usuarios",
-    timestamps: true,
-  }
-);

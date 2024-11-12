@@ -1,5 +1,4 @@
-import { DataTypes, Model, Optional } from "sequelize";
-import { sequelize } from "../config/db";
+import { DataTypes, Model, Optional, Sequelize } from "sequelize";
 import { PlanoAluno } from "./planoAlunoModel";
 import { Plano } from "./planoModel";
 import { Telefone } from "./telefoneModel";
@@ -41,6 +40,60 @@ export class Aluno
   public readonly createdAt?: Date;
   public readonly updatedAt?: Date;
 
+  public static initModel(sequelize: Sequelize): typeof Aluno {
+    Aluno.init(
+      {
+        id: {
+          type: DataTypes.INTEGER.UNSIGNED,
+          autoIncrement: true,
+          primaryKey: true,
+        },
+        nome: {
+          type: DataTypes.STRING,
+          allowNull: false,
+        },
+        cpf: {
+          type: DataTypes.STRING,
+          allowNull: false,
+        },
+        rg: {
+          type: DataTypes.STRING,
+          allowNull: false,
+        },
+        cidade: {
+          type: DataTypes.STRING,
+          allowNull: false,
+        },
+        cep: {
+          type: DataTypes.STRING,
+          allowNull: false,
+        },
+        uf: {
+          type: DataTypes.STRING,
+          allowNull: false,
+        },
+        numero: {
+          type: DataTypes.STRING,
+          allowNull: false,
+        },
+        bairro: {
+          type: DataTypes.STRING,
+          allowNull: false,
+        },
+        logradouro: {
+          type: DataTypes.STRING,
+          allowNull: false,
+        },
+      },
+      {
+        sequelize,
+        tableName: "Alunos",
+        timestamps: true,
+      }
+    );
+    return Aluno;
+  }
+
   static associate = () => {
     Aluno.hasMany(Telefone, {
       foreignKey: "idAluno",
@@ -55,54 +108,3 @@ export class Aluno
     });
   };
 }
-
-Aluno.init(
-  {
-    id: {
-      type: DataTypes.INTEGER.UNSIGNED,
-      autoIncrement: true,
-      primaryKey: true,
-    },
-    nome: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    cpf: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    rg: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    cidade: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    cep: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    uf: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    numero: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    bairro: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    logradouro: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-  },
-  {
-    sequelize,
-    tableName: "Alunos",
-    timestamps: true,
-  }
-);
