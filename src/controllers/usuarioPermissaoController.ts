@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { usuarioPermissaoService, usuarioService } from "../services";
+import { usuarioPermissaoService } from "../services";
 import { sendResponse } from "../utils/responseHamdler";
 
 export const usuarioPermissaoController = {
@@ -24,10 +24,11 @@ export const usuarioPermissaoController = {
         usuariosPermissao = rows;
         totalUsuarioPermissao = count;
       } else {
-        const { rows, count } = await usuarioService.listUsuarios({
-          limit: perPage,
-          offset,
-        });
+        const { rows, count } =
+          await usuarioPermissaoService.listUsuarioPermissao({
+            limit: perPage,
+            offset,
+          });
 
         usuariosPermissao = rows;
         totalUsuarioPermissao = count;
@@ -134,7 +135,7 @@ export const usuarioPermissaoController = {
     try {
       const { id } = req.params;
 
-      await usuarioService.deleteUsuario(Number(id));
+      await usuarioPermissaoService.deleteUsuarioPermissao(Number(id));
 
       return sendResponse({
         res,
