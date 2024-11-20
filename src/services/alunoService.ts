@@ -34,6 +34,9 @@ export const alunoService = {
    */
   listAlunos: async ({ limit, offset }: { limit: number; offset: number }) => {
     const alunos = await Aluno.findAndCountAll({
+      where: {
+        isActive: true,
+      },
       include: [
         {
           model: Telefone,
@@ -42,7 +45,7 @@ export const alunoService = {
         {
           model: Plano,
           as: "planos",
-          // through: { attributes: ["isExperimental"] },
+          through: { attributes: ["isExperimental"] },
         },
       ],
       limit,
@@ -94,7 +97,8 @@ export const alunoService = {
       throw new Error("Aluno não encontrado");
     }
 
-    await aluno.destroy();
+    // Atualiza a coluna isActive para false
+    await aluno.update({ isActive: false });
   },
 
   /**
@@ -109,6 +113,7 @@ export const alunoService = {
         nome: {
           [Op.like]: `%${nome}%`,
         },
+        isActive: true,
       },
     });
 

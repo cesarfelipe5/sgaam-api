@@ -15,13 +15,17 @@ export interface AlunoAttributes {
   numero: string;
   bairro: string;
   logradouro: string;
+  isActive: boolean;
   createdAt?: Date;
   updatedAt?: Date;
 }
 
 // Interface para os atributos de criação do Aluno (sem o id, createdAt, updatedAt)
 export interface AlunoCreationAttributes
-  extends Optional<AlunoAttributes, "id" | "createdAt" | "updatedAt"> {}
+  extends Optional<
+    AlunoAttributes,
+    "id" | "isActive" | "createdAt" | "updatedAt"
+  > {}
 
 export class Aluno
   extends Model<AlunoAttributes, AlunoCreationAttributes>
@@ -37,6 +41,7 @@ export class Aluno
   public numero!: string;
   public bairro!: string;
   public logradouro!: string;
+  public isActive!: boolean;
   public readonly createdAt?: Date;
   public readonly updatedAt?: Date;
 
@@ -82,6 +87,11 @@ export class Aluno
         },
         logradouro: {
           type: DataTypes.STRING,
+          allowNull: false,
+        },
+        isActive: {
+          type: DataTypes.BOOLEAN,
+          defaultValue: true,
           allowNull: false,
         },
       },

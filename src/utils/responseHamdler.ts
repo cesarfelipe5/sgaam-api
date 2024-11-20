@@ -40,6 +40,7 @@ export const sendResponse = (props: SendResponseProps) => {
 
     return res.status(500).json({
       status: 500,
+      success: false,
       message: props.message || "Erro no servidor.", // Usa message opcional se fornecido
       errors: [{ msg: errorMessage }],
     });
@@ -48,6 +49,7 @@ export const sendResponse = (props: SendResponseProps) => {
   // Se não for erro, é uma resposta de sucesso
   return res.status(status).json({
     status,
+    success: true,
     message: props.message, // Aqui message é obrigatório
     data: props.data || null, // Aqui data é obrigatório
     pagination: props.pagination,

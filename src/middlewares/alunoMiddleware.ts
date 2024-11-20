@@ -106,16 +106,16 @@ export const alunoMiddleware = {
     body("nome")
       .optional()
       .isLength({ min: 2 })
-      .withMessage("Nome deve ter pelo menos 2 caracteres")
-      .custom(uniqueValidator({ service: alunoService, field: "nome" })),
+      .withMessage("Nome deve ter pelo menos 2 caracteres"),
+    // .custom(uniqueValidator({ service: alunoService, field: "nome" })),
 
     body("cpf")
       .optional()
       .isLength({ min: 11, max: 11 })
       .withMessage("CPF deve ter 11 dígitos")
       .matches(/^\d{11}$/)
-      .withMessage("CPF deve conter apenas números")
-      .custom(uniqueValidator({ service: alunoService, field: "cpf" })),
+      .withMessage("CPF deve conter apenas números"),
+    // .custom(uniqueValidator({ service: alunoService, field: "cpf" })),
 
     body("rg")
       .optional()
