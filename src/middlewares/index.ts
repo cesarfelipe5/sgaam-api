@@ -6,4 +6,5 @@ export { modalidadeMiddleware } from "./modalidadeMiddleware";
 export { pagamentoMiddleware } from "./pagamentoMiddleware";
 export { permissaoMiddleware } from "./permissaoMiddleware";
 export { planoMiddleware } from "./planoMiddleware";
+export { planoModalidadeMiddleware } from "./planoModalidadeMiddleware";
 export { usuarioMiddleware } from "./usuarioMiddleware";

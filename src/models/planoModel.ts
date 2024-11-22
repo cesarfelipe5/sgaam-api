@@ -9,15 +9,19 @@ export interface PlanoAttributes {
   id: number;
   nome: string;
   descricao: string;
-  inicioVigencia: Date;
-  fimVigencia: Date;
+  // inicioVigencia: Date;
+  // fimVigencia: Date;
   precoPadrao: Date;
+  isActive: Boolean;
   createdAt?: Date;
   updatedAt?: Date;
 }
 
 export interface PlanoCreationAttributes
-  extends Optional<PlanoAttributes, "id" | "createdAt" | "updatedAt"> {}
+  extends Optional<
+    PlanoAttributes,
+    "id" | "isActive" | "createdAt" | "updatedAt"
+  > {}
 
 export class Plano
   extends Model<PlanoAttributes, PlanoCreationAttributes>
@@ -26,9 +30,10 @@ export class Plano
   public id!: number;
   public nome!: string;
   public descricao!: string;
-  public inicioVigencia!: Date;
-  public fimVigencia!: Date;
+  // public inicioVigencia!: Date;
+  // public fimVigencia!: Date;
   public precoPadrao!: Date;
+  public isActive!: Boolean;
   public readonly createdAt?: Date;
   public readonly updatedAt?: Date;
 
@@ -48,17 +53,22 @@ export class Plano
           type: DataTypes.TEXT,
           allowNull: false,
         },
-        inicioVigencia: {
-          type: DataTypes.DATE,
-          allowNull: false,
-        },
-        fimVigencia: {
-          type: DataTypes.DATE,
-          allowNull: false,
-        },
+        // inicioVigencia: {
+        //   type: DataTypes.DATE,
+        //   allowNull: false,
+        // },
+        // fimVigencia: {
+        //   type: DataTypes.DATE,
+        //   allowNull: false,
+        // },
         precoPadrao: {
           type: DataTypes.DECIMAL,
           allowNull: false,
+        },
+        isActive: {
+          type: DataTypes.BOOLEAN,
+          allowNull: false,
+          defaultValue: true,
         },
       },
       {

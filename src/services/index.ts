@@ -5,6 +5,7 @@ export { formaPagamentoService } from "./formaPagamentoService";
 export { modalidadeService } from "./modalidadeService";
 export { pagamentoService } from "./pagamentoService";
 export { permissaoService } from "./permissaoService";
+export { planoModalidadeService } from "./planoModalidadeService";
 export { planoService } from "./planoService";
 export { usuarioPermissaoService } from "./usuarioPermissaoService";
 export { usuarioService } from "./usuarioService";

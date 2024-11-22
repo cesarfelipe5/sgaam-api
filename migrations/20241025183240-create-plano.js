@@ -18,17 +18,22 @@ module.exports = {
         type: Sequelize.TEXT,
         allowNull: false,
       },
-      inicioVigencia: {
-        type: Sequelize.DATE,
-        allowNull: false,
-      },
-      fimVigencia: {
-        type: Sequelize.DATE,
-        allowNull: false,
-      },
+      // inicioVigencia: {
+      //   type: Sequelize.DATE,
+      //   allowNull: false,
+      // },
+      // fimVigencia: {
+      //   type: Sequelize.DATE,
+      //   allowNull: false,
+      // },
       precoPadrao: {
         type: Sequelize.DECIMAL,
         allowNull: false,
+      },
+      isActive: {
+        type: Sequelize.BOOLEAN,
+        allowNull: false,
+        defaultValue: true,
       },
       createdAt: {
         type: Sequelize.DATE,

@@ -59,12 +59,12 @@ export class PlanoModalidade
   static associate() {
     PlanoModalidade.belongsTo(Plano, {
       foreignKey: "idPlano",
-      as: "plano",
+      as: "planos",
     });
 
     PlanoModalidade.belongsTo(Modalidade, {
       foreignKey: "idModalidade",
-      as: "modalidade",
+      as: "modalidades",
     });
   }
 }

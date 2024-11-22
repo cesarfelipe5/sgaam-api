@@ -110,10 +110,10 @@ export const alunoService = {
       limit,
       offset,
       where: {
+        isActive: true,
         nome: {
           [Op.like]: `%${nome}%`,
         },
-        isActive: true,
       },
     });
 

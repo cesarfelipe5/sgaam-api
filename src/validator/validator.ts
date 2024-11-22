@@ -5,6 +5,7 @@ interface UniqueValidatorOptions<T extends Model> {
   service: ReturnType<typeof createBaseService<T>>;
   field: keyof T["_attributes"];
   message?: string;
+  idField?: string;
 }
 
 interface ExistsValidatorOptions<T extends Model> {
@@ -13,7 +14,12 @@ interface ExistsValidatorOptions<T extends Model> {
 }
 
 export const uniqueValidator =
-  <T extends Model>({ service, field, message }: UniqueValidatorOptions<T>) =>
+  <T extends Model>({
+    service,
+    field,
+    message,
+    idField = "id",
+  }: UniqueValidatorOptions<T>) =>
   async (value: string) => {
     const existingRecord = await service.findOne(field, value);
 
@@ -24,13 +30,45 @@ export const uniqueValidator =
     return true;
   };
 
+// export const existsValidator =
+//   <T extends Model>({ service, message }: ExistsValidatorOptions<T>) =>
+//   async (value: string) => {
+//     const record = await service.findById(value);
+
+//     if (!record) {
+//       throw new Error(message || `Registro não encontrado`);
+//     }
+
+//     return true;
+//   };
+
 export const existsValidator =
   <T extends Model>({ service, message }: ExistsValidatorOptions<T>) =>
-  async (value: string) => {
-    const record = await service.findById(value);
+  async (values: string[] | string) => {
+    // Verifica se é um array
+    if (Array.isArray(values)) {
+      const invalidIds = [];
 
-    if (!record) {
-      throw new Error(message || `Registro não encontrado`);
+      for (const value of values) {
+        const record = await service.findById(value); // Verifica se o ID existe
+
+        if (!record) {
+          invalidIds.push(value);
+        }
+      }
+
+      if (invalidIds.length > 0) {
+        throw new Error(
+          message || `Os seguintes IDs não existem: ${invalidIds.join(", ")}`
+        );
+      }
+    } else {
+      // Se não for um array, trata como valor único
+      const record = await service.findById(values);
+
+      if (!record) {
+        throw new Error(message || `Registro não encontrado`);
+      }
     }
 
     return true;

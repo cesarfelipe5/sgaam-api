@@ -48,7 +48,7 @@ export const alunoMiddleware = {
       .notEmpty()
       .withMessage("CEP é obrigatório")
       .matches(/^\d{8}$/)
-      .withMessage("CEP deve conter apenas números"),
+      .withMessage("CEP deve conter 8 números"),
 
     body("numero")
       .notEmpty()
@@ -69,6 +69,7 @@ export const alunoMiddleware = {
       .withMessage("Logradouro deve ter pelo menos 2 caracteres"),
 
     body("telefones")
+      .notEmpty()
       .isArray({ min: 1 })
       .withMessage("É necessário pelo menos um telefone")
       .custom((telefones) => {
@@ -137,7 +138,7 @@ export const alunoMiddleware = {
     body("cep")
       .optional()
       .matches(/^\d{8}$/)
-      .withMessage("CEP deve conter apenas números"),
+      .withMessage("CEP deve conter 8 números"),
 
     body("numero")
       .optional()

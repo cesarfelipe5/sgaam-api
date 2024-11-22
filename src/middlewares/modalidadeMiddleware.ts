@@ -42,8 +42,8 @@ export const modalidadeMiddleware = {
       .notEmpty()
       .withMessage("Nome é obrigatório")
       .isLength({ min: 2 })
-      .withMessage("Nome deve ter pelo menos 2 caracteres")
-      .custom(uniqueValidator({ service: modalidadeService, field: "nome" })),
+      .withMessage("Nome deve ter pelo menos 2 caracteres"),
+    // .custom(uniqueValidator({ service: modalidadeService, field: "nome" })),
 
     body("descricao")
       .optional()

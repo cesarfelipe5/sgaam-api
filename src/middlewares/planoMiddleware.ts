@@ -1,10 +1,11 @@
 import { body, param } from "express-validator";
-import { Plano } from "../models";
+import { Modalidade, Plano } from "../models";
 import { createBaseService } from "../services";
 import { handleValidationErrors } from "../utils/validationErrors";
 import { existsValidator } from "../validator";
 
 const planoService = createBaseService(Plano);
+const modalidadeService = createBaseService(Modalidade);
 
 export const planoMiddleware = {
   validateCreate: [
@@ -20,21 +21,31 @@ export const planoMiddleware = {
       .isLength({ min: 2 })
       .withMessage("Descrição deve ter pelo menos 2 caracteres"),
 
-    body("inicioVigencia")
+    body("modalidadeIds")
       .notEmpty()
-      .withMessage("Início da vigência é obrigatório")
-      .isISO8601()
-      .withMessage(
-        "Início da vigência deve estar em um formato de data válido (ISO8601)"
+      .isArray({ min: 1 })
+      .withMessage("É necessário a seleção de pelo menos uma modalidade")
+      .custom(
+        existsValidator({
+          service: modalidadeService,
+        })
       ),
 
-    body("fimVigencia")
-      .notEmpty()
-      .withMessage("Fim da vigência é obrigatório")
-      .isISO8601()
-      .withMessage(
-        "Fim da vigência deve estar em um formato de data válido (ISO8601)"
-      ),
+    // body("inicioVigencia")
+    //   .notEmpty()
+    //   .withMessage("Início da vigência é obrigatório")
+    //   .isISO8601()
+    //   .withMessage(
+    //     "Início da vigência deve estar em um formato de data válido (ISO8601)"
+    //   ),
+
+    // body("fimVigencia")
+    //   .notEmpty()
+    //   .withMessage("Fim da vigência é obrigatório")
+    //   .isISO8601()
+    //   .withMessage(
+    //     "Fim da vigência deve estar em um formato de data válido (ISO8601)"
+    //   ),
 
     body("precoPadrao")
       .notEmpty()
@@ -64,15 +75,24 @@ export const planoMiddleware = {
       .isLength({ min: 2 })
       .withMessage("Descrição deve ter pelo menos 2 caracteres"),
 
-    body("inicioVigencia")
+    body("modalidades")
       .optional()
-      .isDate()
-      .withMessage("Início da vigência deve ser uma data válida"),
+      .isArray({ min: 1 })
+      .withMessage("É necessário a seleção de pelo menos uma modalidade")
+      .custom(
+        existsValidator({
+          service: modalidadeService,
+        })
+      ),
+    // body("inicioVigencia")
+    //   .optional()
+    //   .isDate()
+    //   .withMessage("Início da vigência deve ser uma data válida"),
 
-    body("fimVigencia")
-      .optional()
-      .isDate()
-      .withMessage("Fim da vigência deve ser uma data válida"),
+    // body("fimVigencia")
+    //   .optional()
+    //   .isDate()
+    //   .withMessage("Fim da vigência deve ser uma data válida"),
 
     body("precoPadrao")
       .optional()

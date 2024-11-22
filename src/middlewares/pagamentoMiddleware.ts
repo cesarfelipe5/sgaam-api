@@ -1,5 +1,5 @@
 import { body, param } from "express-validator";
-import { FormaPagamento, Pagamento, Usuario } from "../models";
+import { FormaPagamento, Pagamento, PlanoAluno, Usuario } from "../models";
 import { createBaseService } from "../services";
 import { handleValidationErrors } from "../utils/validationErrors";
 import { existsValidator } from "../validator";
@@ -7,6 +7,7 @@ import { existsValidator } from "../validator";
 const pagamentoService = createBaseService(Pagamento);
 const formaPagamentoService = createBaseService(FormaPagamento);
 const usuarioService = createBaseService(Usuario);
+const planoAlunoService = createBaseService(PlanoAluno);
 
 export const pagamentoMiddleware = {
   validateCreate: [
@@ -37,16 +38,10 @@ export const pagamentoMiddleware = {
         "Data de vencimento deve estar em um formato de data válido (ISO8601)"
       ),
 
-    body("idUsuario")
+    body("idPlanoAluno")
       .notEmpty()
-      .withMessage("ID do usuário é obrigatório")
-      .custom(existsValidator({ service: usuarioService })),
-
-    // TODO REVER
-    // body("idPlanoAluno")
-    //   .notEmpty()
-    //   .withMessage("ID do plano do aluno é obrigatório")
-    //   .custom(existsValidator({ service: usuarioService })),
+      .withMessage("ID do plano do aluno é obrigatório")
+      .custom(existsValidator({ service: planoAlunoService })),
 
     body("idFormaPagamento")
       .notEmpty()
@@ -88,15 +83,9 @@ export const pagamentoMiddleware = {
         "Data de vencimento deve estar em um formato de data válido (ISO8601)"
       ),
 
-    body("idUsuario")
+    body("idPlanoAluno")
       .optional()
-      .custom(existsValidator({ service: usuarioService })),
-
-    // TODO REVER
-    // body("idPlanoAluno")
-    //   .notEmpty()
-    //   .withMessage("ID do plano do aluno é obrigatório")
-    //   .custom(existsValidator({ service: usuarioService })),
+      .custom(existsValidator({ service: planoAlunoService })),
 
     body("idFormaPagamento")
       .optional()

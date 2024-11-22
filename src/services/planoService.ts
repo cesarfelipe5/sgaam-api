@@ -1,5 +1,11 @@
 import { Op } from "sequelize";
-import { Aluno, Modalidade, Plano, PlanoCreationAttributes } from "../models";
+import {
+  Aluno,
+  Modalidade,
+  Plano,
+  PlanoCreationAttributes,
+  PlanoModalidade,
+} from "../models";
 
 interface SearchPlanos {
   nome: string;
@@ -13,18 +19,22 @@ export const planoService = {
    * @param id - ID do plano
    */
   findPlanoById: async (id: number) => {
-    const plano = await Plano.findByPk(id, {
-      include: [
-        { model: Aluno, as: "alunos" },
-        { model: Modalidade, as: "modalidades" },
-      ],
-    });
+    try {
+      const plano = await Plano.findByPk(id, {
+        include: [
+          { model: Aluno, as: "alunos" },
+          { model: Modalidade, as: "modalidades" },
+        ],
+      });
 
-    if (!plano) {
-      throw new Error("Plano não encontrado");
+      if (!plano) {
+        throw new Error("Plano não encontrado");
+      }
+
+      return plano;
+    } catch (error) {
+      throw error;
     }
-
-    return plano;
   },
 
   /**
@@ -33,30 +43,55 @@ export const planoService = {
    * @param offset - Em qual posição inciar
    */
   listPlanos: async ({ limit, offset }: { limit: number; offset: number }) => {
-    const planos = await Plano.findAndCountAll({
-      include: [
-        { model: Aluno, as: "alunos" },
-        { model: Modalidade, as: "modalidades" },
-      ],
-      limit,
-      offset,
-    });
+    try {
+      const planos = await Plano.findAndCountAll({
+        where: {
+          isActive: true,
+        },
+        include: [
+          { model: Aluno, as: "alunos" },
+          { model: Modalidade, as: "modalidades" },
+        ],
+        limit,
+        offset,
+      });
 
-    return planos;
+      return planos;
+    } catch (error) {
+      throw error;
+    }
   },
 
-  /**
-   * Cria um novo plano
-   * @param data - Dados do plano a ser criado
-   */
-  createPlano: async (data: PlanoCreationAttributes): Promise<Plano> => {
+  createPlano: async (
+    planoData: PlanoCreationAttributes,
+    modalidadeIds: number[]
+  ) => {
     try {
-      const plano = await Plano.create(data);
+      // Cria o plano
+      const plano = await Plano.create(planoData);
+
+      // Verifica se as modalidades existem
+      const modalidades = await Modalidade.findAll({
+        where: { id: modalidadeIds },
+      });
+
+      if (modalidades.length !== modalidadeIds.length) {
+        throw new Error(
+          "Uma ou mais modalidades não existem. Verifique os IDs fornecidos."
+        );
+      }
+
+      // Cria as associações no modelo intermediário
+      const planoModalidades = modalidadeIds.map((idModalidade) => ({
+        idPlano: plano.id,
+        idModalidade,
+      }));
+
+      await PlanoModalidade.bulkCreate(planoModalidades);
 
       return plano;
     } catch (error) {
-      console.error("Erro ao criar plano:", error);
-      throw error; // Ou faça o tratamento adequado do erro
+      throw error;
     }
   },
 
@@ -66,15 +101,19 @@ export const planoService = {
    * @param data - Dados a serem atualizados
    */
   updatePlano: async (id: number, data: Partial<PlanoCreationAttributes>) => {
-    const plano = await Plano.findByPk(id);
+    try {
+      const plano = await Plano.findByPk(id);
 
-    if (!plano) {
-      throw new Error("Plano não encontrado");
+      if (!plano) {
+        throw new Error("Plano não encontrado");
+      }
+
+      await plano.update(data);
+
+      return plano;
+    } catch (error) {
+      throw error;
     }
-
-    await plano.update(data);
-
-    return plano;
   },
 
   /**
@@ -82,13 +121,17 @@ export const planoService = {
    * @param id - Id do plano a remover
    */
   deletePlano: async (id: number): Promise<void> => {
-    const plano = await Plano.findByPk(id);
+    try {
+      const plano = await Plano.findByPk(id);
 
-    if (!plano) {
-      throw new Error("Plano não encontrado");
+      if (!plano) {
+        throw new Error("Plano não encontrado");
+      }
+
+      await plano.update({ isActive: false });
+    } catch (error) {
+      throw error;
     }
-
-    await plano.destroy();
   },
 
   /**
@@ -96,16 +139,21 @@ export const planoService = {
    * @param nome - Nome parcial ou completo do plano
    */
   searchPlano: async ({ nome, limit, offset }: SearchPlanos) => {
-    const planos = await Plano.findAndCountAll({
-      limit,
-      offset,
-      where: {
-        nome: {
-          [Op.like]: `%${nome}%`,
+    try {
+      const planos = await Plano.findAndCountAll({
+        limit,
+        offset,
+        where: {
+          isActive: true,
+          nome: {
+            [Op.like]: `%${nome}%`,
+          },
         },
-      },
-    });
+      });
 
-    return planos;
+      return planos;
+    } catch (error) {
+      throw error;
+    }
   },
 };

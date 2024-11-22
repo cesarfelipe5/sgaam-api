@@ -5,5 +5,6 @@ export { modalidadeController } from "./modalidadeController";
 export { pagamentoController } from "./pagamentoController";
 export { permissaoController } from "./permissaoController";
 export { planoController } from "./planoController";
+export { planoModalidadeController } from "./planoModalidadeController";
 export { usuarioController } from "./usuarioController";
 export { usuarioPermissaoController } from "./usuarioPermissaoController";

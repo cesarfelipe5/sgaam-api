@@ -20,7 +20,7 @@ export const usuarioService = {
   findUsuarioById: async (id: number) => {
     const usuario = await Usuario.findByPk(id, {
       include: [
-        { model: Permissao, as: "permissao" },
+        { model: Permissao, as: "permissoes" },
         { model: Pagamento, as: "pagamentos" },
       ],
     });
@@ -46,7 +46,7 @@ export const usuarioService = {
   }) => {
     const usuarios = await Usuario.findAndCountAll({
       include: [
-        { model: Permissao, as: "permissao" },
+        { model: Permissao, as: "permissoes" },
         { model: Pagamento, as: "pagamentos" },
       ],
       limit,

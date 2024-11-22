@@ -1,55 +1,45 @@
 import { Request, Response } from "express";
-import { planoService } from "../services";
+import { planoModalidadeService } from "../services";
 import { sendResponse } from "../utils/responseHamdler";
 
-export const planoController = {
+export const planoModalidadeController = {
   listOrSearch: async (req: Request, res: Response) => {
     try {
-      let planos;
-      let totalPlanos;
+      let planoModalidade;
+      let totalPlanoModalidade;
 
-      const { nome } = req.query;
       const perPage = Number(req.query.perPage as string) || 10;
       const currentPage = Number(req.query.currentPage as string) || 1;
       const offset = (currentPage - 1) * perPage;
 
-      if (nome) {
-        const { rows, count } = await planoService.searchPlano({
-          nome: nome as string,
+      const { rows, count } = await planoModalidadeService.listPlanosModalidade(
+        {
           limit: perPage,
           offset,
-        });
+        }
+      );
 
-        planos = rows;
-        totalPlanos = count;
-      } else {
-        const { rows, count } = await planoService.listPlanos({
-          limit: perPage,
-          offset,
-        });
+      planoModalidade = rows;
+      totalPlanoModalidade = count;
 
-        planos = rows;
-        totalPlanos = count;
-      }
-
-      const totalPages = Math.ceil(totalPlanos / perPage);
+      const totalPages = Math.ceil(totalPlanoModalidade / perPage);
 
       return sendResponse({
         res,
         status: 200,
-        message: "Planos listados com sucesso!",
-        data: planos,
+        message: "PlanoModalidade listados com sucesso!",
+        data: planoModalidade,
         pagination: {
           currentPage,
           perPage,
           totalPages,
-          total: totalPlanos,
+          total: totalPlanoModalidade,
         },
       });
     } catch (error) {
       return sendResponse({
         res,
-        message: "Erro ao listar planos.",
+        message: "Erro ao listar planoModalidade.",
         error,
       });
     }
@@ -59,18 +49,19 @@ export const planoController = {
     try {
       const { id } = req.params;
 
-      const plano = await planoService.findPlanoById(Number(id));
+      const planoModalidade =
+        await planoModalidadeService.findPlanoModalidadeById(Number(id));
 
       return sendResponse({
         res,
         status: 200,
-        message: "Plano encontrado com sucesso!",
-        data: plano,
+        message: "PlanoModalidade encontrado com sucesso!",
+        data: planoModalidade,
       });
     } catch (error) {
       return sendResponse({
         res,
-        message: "Houve um erro buscar o plano.",
+        message: "Houve um erro buscar o planoModalidade.",
         error,
       });
     }
@@ -78,34 +69,24 @@ export const planoController = {
 
   create: async (req: Request, res: Response) => {
     try {
-      const {
-        nome,
-        descricao,
-        // inicioVigencia, fimVigencia,
-        precoPadrao,
-        modalidadeIds,
-      } = req.body;
+      const { idModalidade, idPlano } = req.body;
 
-      const plano = await planoService.createPlano(
-        {
-          nome,
-          descricao,
-          // inicioVigencia, fimVigencia,
-          precoPadrao,
-        },
-        modalidadeIds
-      );
+      const planoModalidade =
+        await planoModalidadeService.createPlanoModalidade({
+          idModalidade,
+          idPlano,
+        });
 
       return sendResponse({
         res,
         status: 201,
-        message: "Plano criado com sucesso!",
-        data: plano,
+        message: "PlanoModalidade criado com sucesso!",
+        data: planoModalidade,
       });
     } catch (error: unknown) {
       return sendResponse({
         res,
-        message: "Houve um erro na criação do plano.",
+        message: "Houve um erro na criação do planoModalidade.",
         error,
       });
     }
@@ -117,18 +98,22 @@ export const planoController = {
 
       const updatedData = req.body;
 
-      const aluno = await planoService.updatePlano(Number(id), updatedData);
+      const planoModalidade =
+        await planoModalidadeService.updatePlanoModalidade(
+          Number(id),
+          updatedData
+        );
 
       return sendResponse({
         res,
         status: 200,
-        message: "Plano atualizado com sucesso!",
-        data: aluno,
+        message: "PlanoModalidade atualizado com sucesso!",
+        data: planoModalidade,
       });
     } catch (error) {
       return sendResponse({
         res,
-        message: "Erro ao atualizar o plano.",
+        message: "Erro ao atualizar o planoModalidade.",
         error,
       });
     }
@@ -138,17 +123,17 @@ export const planoController = {
     try {
       const { id } = req.params;
 
-      await planoService.deletePlano(Number(id));
+      await planoModalidadeService.deletePlanoModalidade(Number(id));
 
       return sendResponse({
         res,
         status: 200,
-        message: "Plano removido com sucesso!",
+        message: "PlanoModalidade removido com sucesso!",
       });
     } catch (error) {
       return sendResponse({
         res,
-        message: "Erro ao remover plano.",
+        message: "Erro ao remover o planoModalidade.",
         error,
       });
     }

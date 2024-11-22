@@ -65,14 +65,14 @@ export const pagamentoController = {
   },
 
   create: async (req: Request, res: Response) => {
+    const user = (req as any).user; // Pegando os dados do usuário armazenados no middleware
+
     try {
       const {
         dataPagamento,
         valor,
         observacao,
         dataVencimento,
-        pago,
-        idUsuario,
         idPlanoAluno,
         idFormaPagamento,
       } = req.body;
@@ -82,8 +82,8 @@ export const pagamentoController = {
         valor,
         observacao,
         dataVencimento,
-        pago,
-        idUsuario,
+        pago: true,
+        idUsuario: user.id,
         idPlanoAluno,
         idFormaPagamento,
       });
