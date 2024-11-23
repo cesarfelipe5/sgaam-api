@@ -1,4 +1,5 @@
 export { alunoMiddleware } from "./alunoMiddleware";
+export { aulaExperimentalMiddleware } from "./aulaExperimentalMiddleware";
 export { authenticateToken } from "./authenticateMiddleware";
 export { authMiddleware } from "./authMiddleware";
 export { formaPagamentoMiddleware } from "./formaPagamentoMiddleware";

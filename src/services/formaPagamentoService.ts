@@ -3,6 +3,7 @@ import {
   FormaPagamento,
   FormaPagamentoCreationAttributes,
   Pagamento,
+  sequelize,
 } from "../models";
 
 interface SearchFormaPagamento {
@@ -48,6 +49,15 @@ export const formaPagamentoService = {
       where: {
         isActive: true,
       },
+      order: [
+        // Extrai a parte do nome que contém o número e converte para inteiro
+        [
+          sequelize.literal('CAST(SUBSTRING_INDEX(nome, " ", -2) AS UNSIGNED)'),
+          "ASC",
+        ],
+        // Ordena pelo restante da string, se necessário
+        [sequelize.literal('SUBSTRING_INDEX(nome, " ", 1)'), "ASC"],
+      ],
       limit,
       offset,
     });
@@ -116,13 +126,22 @@ export const formaPagamentoService = {
     offset,
   }: SearchFormaPagamento) => {
     const formaPagamento = await FormaPagamento.findAndCountAll({
-      limit,
-      offset,
       where: {
         nome: {
           [Op.like]: `%${nome}%`,
         },
       },
+      order: [
+        // Extrai a parte do nome que contém o número e converte para inteiro
+        [
+          sequelize.literal('CAST(SUBSTRING_INDEX(nome, " ", -2) AS UNSIGNED)'),
+          "ASC",
+        ],
+        // Ordena pelo restante da string, se necessário
+        [sequelize.literal('SUBSTRING_INDEX(nome, " ", 1)'), "ASC"],
+      ],
+      limit,
+      offset,
     });
 
     return formaPagamento;

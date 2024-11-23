@@ -23,7 +23,7 @@ export const authenticateToken = async (
     ) as jwt.JwtPayload;
 
     if (!(await usuarioService.findById(decoded.id))) {
-      return res.status(403).json({ message: "Invalid token" });
+      return res.status(401).json({ message: "Invalid token" });
     }
 
     // Armazena o `id` e qualquer outra informação no `req.user` para acesso em outros middlewares ou rotas
@@ -31,6 +31,6 @@ export const authenticateToken = async (
 
     next();
   } catch (error) {
-    res.status(403).json({ message: "Invalid token" });
+    res.status(401).json({ message: "Invalid token" });
   }
 };

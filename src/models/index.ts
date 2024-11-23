@@ -13,6 +13,11 @@ import {
 } from "./usuarioModel";
 
 import {
+  AulaExperimental,
+  AulaExperimentalAttributes,
+  AulaExperimentalCreationAttributes,
+} from "./aulaExperimentalModel";
+import {
   Modalidade,
   ModalidadeAttributes,
   ModalidadeCreationAttributes,
@@ -61,6 +66,7 @@ PlanoModalidade.initModel(sequelize);
 Plano.initModel(sequelize);
 Usuario.initModel(sequelize);
 UsuarioPermissao.initModel(sequelize);
+AulaExperimental.initModel(sequelize);
 
 // Registrar associações
 Aluno.associate();
@@ -74,6 +80,7 @@ PlanoModalidade.associate();
 Plano.associate();
 Usuario.associate();
 UsuarioPermissao.associate();
+AulaExperimental.associate();
 
 export { sequelize };
 
@@ -109,4 +116,10 @@ export {
   UsuarioPermissao,
   UsuarioPermissaoAttributes,
   UsuarioPermissaoCreationAttributes,
+};
+
+export {
+  AulaExperimental,
+  AulaExperimentalAttributes,
+  AulaExperimentalCreationAttributes,
 };

@@ -45,7 +45,6 @@ export const alunoService = {
         {
           model: Plano,
           as: "planos",
-          through: { attributes: ["isExperimental"] },
         },
       ],
       limit,

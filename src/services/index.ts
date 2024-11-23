@@ -1,4 +1,5 @@
 export { alunoService } from "./alunoService";
+export { aulaExperimentalService } from "./aulaExperimentalService";
 export { authService } from "./authService";
 export { createBaseService } from "./baseService";
 export { formaPagamentoService } from "./formaPagamentoService";

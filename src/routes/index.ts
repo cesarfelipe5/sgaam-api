@@ -1,6 +1,7 @@
 import express from "express";
 import { authenticateToken } from "../middlewares/authenticateMiddleware";
 import { alunoRouter } from "./alunoRoutes";
+import { aulaExperimentalRouter } from "./aulaExperimentalRoutes";
 import { authRouter } from "./authRoutes";
 import { formaPagamentoRouter } from "./formaPagamentoRoutes";
 import { modalidadeRouter } from "./modalidadeRoutes";
@@ -29,5 +30,6 @@ apiRouter.use("/formaPagamento", formaPagamentoRouter);
 apiRouter.use("/pagamento", pagamentoRouter);
 apiRouter.use("/usuarioPermissao", usuarioPermissaoRouter);
 apiRouter.use("/planoModalidade", planoModalidadeRouter);
+apiRouter.use("/aulaExperimental", aulaExperimentalRouter);
 
 export { apiRouter };

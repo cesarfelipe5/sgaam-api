@@ -1,4 +1,5 @@
 import { DataTypes, Model, Optional, Sequelize } from "sequelize";
+import { AulaExperimental } from "./aulaExperimentalModel";
 import { PlanoModalidade } from "./planoModalidadeModel";
 import { Plano } from "./planoModel";
 
@@ -71,6 +72,11 @@ export class Modalidade
       foreignKey: "idModalidade",
       otherKey: "idPlano",
       as: "planos",
+    });
+
+    Modalidade.hasMany(AulaExperimental, {
+      foreignKey: "idModalidade",
+      as: "modalidades",
     });
   }
 }

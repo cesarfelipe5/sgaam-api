@@ -5,7 +5,6 @@ import { Plano } from "./planoModel";
 // Interface para os atributos do Aluno
 export interface PlanoAlunoAttributes {
   id: number;
-  isExperimental: boolean;
   idAluno: number;
   idPlano: number;
   createdAt?: Date;
@@ -21,7 +20,6 @@ export class PlanoAluno
   implements PlanoAlunoAttributes
 {
   public id!: number;
-  public isExperimental!: boolean;
   public idAluno!: number;
   public idPlano!: number;
   public readonly createdAt?: Date;
@@ -34,11 +32,6 @@ export class PlanoAluno
           type: DataTypes.INTEGER.UNSIGNED,
           autoIncrement: true,
           primaryKey: true,
-        },
-        isExperimental: {
-          type: DataTypes.BOOLEAN,
-          allowNull: false,
-          defaultValue: false,
         },
         idAluno: {
           type: DataTypes.NUMBER,

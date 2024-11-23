@@ -1,4 +1,5 @@
 export { alunoController } from "./alunoController";
+export { aulaExperimentalController } from "./aulaExperimentalController";
 export { authController } from "./authController";
 export { formaPagamentoController } from "./formaPagamentoController";
 export { modalidadeController } from "./modalidadeController";
