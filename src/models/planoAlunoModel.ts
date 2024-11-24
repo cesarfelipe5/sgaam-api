@@ -1,5 +1,6 @@
 import { DataTypes, Model, Optional, Sequelize } from "sequelize";
 import { Aluno } from "./alunoModel";
+import { Pagamento } from "./pagamentoModel";
 import { Plano } from "./planoModel";
 
 // Interface para os atributos do Aluno
@@ -62,6 +63,11 @@ export class PlanoAluno
     PlanoAluno.belongsTo(Plano, {
       foreignKey: "idPlano",
       as: "plano",
+    });
+
+    PlanoAluno.hasMany(Pagamento, {
+      as: "pagamentos",
+      foreignKey: "idPlanoAluno",
     });
   }
 }

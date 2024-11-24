@@ -1,5 +1,13 @@
 import { Op } from "sequelize";
-import { Aluno, AlunoCreationAttributes, Plano, Telefone } from "../models";
+import {
+  Aluno,
+  AlunoCreationAttributes,
+  Pagamento,
+  Plano,
+  PlanoAluno,
+  Telefone,
+  Usuario,
+} from "../models";
 
 interface SearchAlunos {
   nome: string;
@@ -15,8 +23,32 @@ export const alunoService = {
   findAlunoById: async (id: number) => {
     const aluno = await Aluno.findByPk(id, {
       include: [
-        { model: Telefone, as: "telefones" },
-        { model: Plano, as: "planos" },
+        {
+          model: Telefone,
+          as: "telefones",
+        },
+        {
+          model: Plano,
+          as: "planos",
+        },
+        {
+          model: PlanoAluno,
+          as: "planoAlunos",
+          include: [
+            {
+              model: Pagamento,
+              as: "pagamentos",
+              required: false, // Isso significa que um aluno pode não ter pagamentos ainda
+
+              include: [
+                {
+                  model: Usuario,
+                  as: "usuarios",
+                },
+              ],
+            },
+          ],
+        },
       ],
     });
 

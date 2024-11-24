@@ -116,5 +116,7 @@ export class Aluno
       otherKey: "idPlano",
       as: "planos",
     });
+
+    Aluno.hasMany(PlanoAluno, { as: "planoAlunos", foreignKey: "idAluno" });
   };
 }
