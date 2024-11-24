@@ -9,7 +9,6 @@ export interface PagamentoAttributes {
   dataPagamento: Date;
   valor: number;
   observacao: string;
-  dataVencimento: Date;
   pago: boolean;
   idUsuario: number;
   idPlanoAluno: number;
@@ -30,7 +29,6 @@ export class Pagamento
   public dataPagamento!: Date;
   public valor!: number;
   public observacao!: string;
-  public dataVencimento!: Date;
   public pago!: boolean;
   public idUsuario!: number;
   public idPlanoAluno!: number;
@@ -56,10 +54,6 @@ export class Pagamento
         },
         observacao: {
           type: DataTypes.STRING,
-        },
-        dataVencimento: {
-          type: DataTypes.DATE,
-          allowNull: false,
         },
         pago: {
           type: DataTypes.BOOLEAN,

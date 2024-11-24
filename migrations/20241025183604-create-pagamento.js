@@ -21,10 +21,6 @@ module.exports = {
       observacao: {
         type: Sequelize.TEXT,
       },
-      dataVencimento: {
-        type: Sequelize.DATE,
-        allowNull: false,
-      },
       pago: {
         type: Sequelize.BOOLEAN,
         allowNull: false,

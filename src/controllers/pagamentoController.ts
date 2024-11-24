@@ -72,7 +72,6 @@ export const pagamentoController = {
         dataPagamento,
         valor,
         observacao,
-        dataVencimento,
         idPlanoAluno,
         idFormaPagamento,
       } = req.body;
@@ -81,7 +80,6 @@ export const pagamentoController = {
         dataPagamento,
         valor,
         observacao,
-        dataVencimento,
         pago: true,
         idUsuario: user.id,
         idPlanoAluno,

@@ -1,7 +1,9 @@
 import {
+  Aluno,
   FormaPagamento,
   Pagamento,
   PagamentoCreationAttributes,
+  Plano,
   PlanoAluno,
   Usuario,
 } from "../models";
@@ -49,7 +51,14 @@ export const pagamentoService = {
       include: [
         { model: Usuario, as: "usuarios" },
         { model: FormaPagamento, as: "formaPagamentos" },
-        { model: PlanoAluno, as: "planoAlunos" },
+        {
+          model: PlanoAluno,
+          as: "planoAlunos",
+          include: [
+            { model: Aluno, as: "aluno" },
+            { model: Plano, as: "plano" },
+          ],
+        },
       ],
       limit,
       offset,

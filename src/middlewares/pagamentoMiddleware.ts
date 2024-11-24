@@ -25,18 +25,9 @@ export const pagamentoMiddleware = {
       .isDecimal({ decimal_digits: "1,2" })
       .withMessage("Valor deve ser um número decimal com até 2 casas decimais"),
 
-    body("observacao")
-      .optional()
-      .isLength({ min: 10 })
-      .withMessage("Observação deve ter pelo menos 10 caractere"),
-
-    body("dataVencimento")
-      .notEmpty()
-      .withMessage("Data de vencimento é obrigatória")
-      .isISO8601()
-      .withMessage(
-        "Data de vencimento deve estar em um formato de data válido (ISO8601)"
-      ),
+    body("observacao").optional(),
+    // .isLength({ min: 10 })
+    // .withMessage("Observação deve ter pelo menos 10 caractere")
 
     body("idPlanoAluno")
       .notEmpty()
@@ -75,13 +66,6 @@ export const pagamentoMiddleware = {
       .optional()
       .isLength({ min: 10 })
       .withMessage("Observação deve ter pelo menos 10 caractere"),
-
-    body("dataVencimento")
-      .optional()
-      .isISO8601()
-      .withMessage(
-        "Data de vencimento deve estar em um formato de data válido (ISO8601)"
-      ),
 
     body("idPlanoAluno")
       .optional()

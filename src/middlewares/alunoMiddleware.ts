@@ -1,13 +1,19 @@
 import { body, param } from "express-validator";
-import { Aluno } from "../models";
+import { Aluno, Plano } from "../models";
 import { createBaseService } from "../services";
 import { handleValidationErrors } from "../utils/validationErrors";
 import { existsValidator, uniqueValidator } from "../validator";
 
 const alunoService = createBaseService(Aluno);
+const planoService = createBaseService(Plano);
 
 export const alunoMiddleware = {
   validateCreate: [
+    body("idPlano")
+      .notEmpty()
+      .withMessage("Id do plano é obrigatório")
+      .custom(existsValidator({ service: planoService })),
+
     body("nome")
       .notEmpty()
       .withMessage("Nome é obrigatório")

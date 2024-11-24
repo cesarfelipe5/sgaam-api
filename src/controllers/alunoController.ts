@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { Telefone } from "../models";
+import { PlanoAluno, Telefone } from "../models";
 import { alunoService } from "../services";
 import { sendResponse } from "../utils/responseHamdler";
 
@@ -81,6 +81,7 @@ export const alunoController = {
   create: async (req: Request, res: Response) => {
     try {
       const {
+        idPlano,
         nome,
         cpf,
         rg,
@@ -112,6 +113,12 @@ export const alunoController = {
         }))
       );
 
+      // Associa o plano ao aluno na tabela intermediária PlanoAluno
+      await PlanoAluno.create({
+        idAluno: aluno.id,
+        idPlano,
+      });
+
       const alunoComTelefones = await alunoService.findAlunoById(aluno.id);
 
       return sendResponse({
@@ -133,15 +140,34 @@ export const alunoController = {
     try {
       const { id } = req.params;
 
-      const updatedData = req.body;
+      const { idPlano, ...updatedData } = req.body;
 
       const aluno = await alunoService.updateAluno(Number(id), updatedData);
+
+      if (!aluno) {
+        return sendResponse({
+          res,
+          status: 404,
+          message: "Aluno não encontrado.",
+        });
+      }
+
+      // Atualiza a associação na tabela intermediária PlanoAluno
+      if (idPlano) {
+        await PlanoAluno.upsert({
+          idAluno: Number(id), // Referência ao aluno
+          idPlano, // Novo plano associado
+        });
+      }
+
+      // Busca os dados atualizados do aluno
+      const alunoAtualizado = await alunoService.findAlunoById(Number(id));
 
       return sendResponse({
         res,
         status: 200,
         message: "Aluno atualizado com sucesso!",
-        data: aluno,
+        data: alunoAtualizado,
       });
     } catch (error) {
       return sendResponse({
