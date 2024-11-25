@@ -44,6 +44,7 @@ export class Aluno
   public isActive!: boolean;
   public readonly createdAt?: Date;
   public readonly updatedAt?: Date;
+  planoAlunos: any;
 
   public static initModel(sequelize: Sequelize): typeof Aluno {
     Aluno.init(

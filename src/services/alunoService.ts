@@ -134,8 +134,40 @@ export const alunoService = {
    * @param id - ID do aluno
    * @param data - Dados a serem atualizados
    */
-  updateAluno: async (id: number, data: Partial<AlunoCreationAttributes>) => {
-    const aluno = await Aluno.findByPk(id);
+  updateAluno: async (
+    id: number,
+    data: Partial<AlunoCreationAttributes>
+  ): Promise<Aluno> => {
+    const aluno = await Aluno.findByPk(id, {
+      include: [
+        {
+          model: Telefone,
+          as: "telefones",
+        },
+        {
+          model: Plano,
+          as: "planos",
+        },
+        {
+          model: PlanoAluno,
+          as: "planoAlunos",
+          include: [
+            {
+              model: Pagamento,
+              as: "pagamentos",
+              required: false, // Isso significa que um aluno pode não ter pagamentos ainda
+
+              include: [
+                {
+                  model: Usuario,
+                  as: "usuarios",
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    });
 
     if (!aluno) {
       throw new Error("Aluno não encontrado");

@@ -155,12 +155,25 @@ export const alunoController = {
         });
       }
 
-      // Atualiza a associação na tabela intermediária PlanoAluno
       if (idPlano) {
-        await PlanoAluno.upsert({
-          idAluno: Number(id), // Referência ao aluno
-          idPlano, // Novo plano associado
-        });
+        if (aluno.planoAlunos.length > 0) {
+          await PlanoAluno.update(
+            {
+              idAluno: Number(id),
+              idPlano,
+            },
+            {
+              where: {
+                id: aluno.planoAlunos[0].id,
+              },
+            }
+          );
+        } else {
+          await PlanoAluno.create({
+            idAluno: Number(id),
+            idPlano,
+          });
+        }
       }
 
       // Busca os dados atualizados do aluno
