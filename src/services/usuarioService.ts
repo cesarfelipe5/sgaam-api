@@ -1,3 +1,4 @@
+import bcrypt from "bcryptjs";
 import { Op } from "sequelize";
 import {
   Pagamento,
@@ -60,9 +61,21 @@ export const usuarioService = {
    * Cria um novo usuario
    * @param data - Dados do usuario a ser criado
    */
-  createUsuario: async (data: UsuarioCreationAttributes): Promise<Usuario> => {
+  createUsuario: async ({
+    nome,
+    email,
+    senha,
+  }: UsuarioCreationAttributes): Promise<Usuario> => {
     try {
-      const usuario = await Usuario.create(data);
+      // Criptografa a senha antes de salvar no banco de dados
+      const hashedPassword = await bcrypt.hash(senha, 10);
+
+      // Usa diretamente o Sequelize para criar um novo usuário
+      const usuario = await Usuario.create({
+        nome,
+        email,
+        senha: hashedPassword,
+      });
 
       return usuario;
     } catch (error) {
@@ -78,17 +91,32 @@ export const usuarioService = {
    */
   updateUsuario: async (
     id: number,
-    data: Partial<UsuarioCreationAttributes>
+    { nome, email, senha }: Partial<UsuarioCreationAttributes>
   ) => {
-    const usuario = await Usuario.findByPk(id);
+    try {
+      const usuario = await Usuario.findByPk(id);
 
-    if (!usuario) {
-      throw new Error("usuario não encontrado");
+      if (!usuario) {
+        throw new Error("Usuário não encontrado");
+      }
+
+      let dataToUpdate: Partial<UsuarioCreationAttributes> = {
+        nome,
+        email,
+      };
+
+      if (senha) {
+        const hashedPassword = await bcrypt.hash(senha, 10);
+        dataToUpdate.senha = hashedPassword;
+      }
+
+      const usuarioNew = await usuario.update(dataToUpdate);
+
+      return usuarioNew;
+    } catch (error) {
+      console.error("Erro ao atualizar usuário:", error);
+      throw error; // Ou faça o tratamento adequado do erro
     }
-
-    await usuario.update(data);
-
-    return usuario;
   },
 
   /**
@@ -102,7 +130,8 @@ export const usuarioService = {
       throw new Error("Usuario não encontrado");
     }
 
-    await usuario.destroy();
+    // Atualiza a coluna isActive para false
+    await usuario.update({ isActive: false });
   },
 
   /**

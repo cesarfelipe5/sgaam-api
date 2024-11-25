@@ -8,12 +8,16 @@ export interface UsuarioAttributes {
   nome: string;
   email: string;
   senha: string;
+  isActive: boolean;
   createdAt?: Date;
   updatedAt?: Date;
 }
 
 export interface UsuarioCreationAttributes
-  extends Optional<UsuarioAttributes, "id" | "createdAt" | "updatedAt"> {}
+  extends Optional<
+    UsuarioAttributes,
+    "id" | "isActive" | "createdAt" | "updatedAt"
+  > {}
 
 export class Usuario
   extends Model<UsuarioAttributes, UsuarioCreationAttributes>
@@ -23,6 +27,7 @@ export class Usuario
   public nome!: string;
   public email!: string;
   public senha!: string;
+  public isActive!: boolean;
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;
 
@@ -47,11 +52,22 @@ export class Usuario
           type: DataTypes.STRING,
           allowNull: false,
         },
+        isActive: {
+          type: DataTypes.BOOLEAN,
+          allowNull: false,
+          defaultValue: true,
+        },
       },
       {
         sequelize,
         tableName: "Usuarios",
         timestamps: true,
+        defaultScope: {
+          attributes: { exclude: ["senha"] },
+        },
+        scopes: {
+          withPassword: {},
+        },
       }
     );
 

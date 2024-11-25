@@ -66,9 +66,6 @@ export const alunoService = {
    */
   listAlunos: async ({ limit, offset }: { limit: number; offset: number }) => {
     const alunos = await Aluno.findAndCountAll({
-      where: {
-        isActive: true,
-      },
       include: [
         {
           model: Telefone,
@@ -141,7 +138,6 @@ export const alunoService = {
       limit,
       offset,
       where: {
-        isActive: true,
         nome: {
           [Op.like]: `%${nome}%`,
         },

@@ -2,7 +2,7 @@ import { body, param } from "express-validator";
 import { Usuario } from "../models";
 import { createBaseService } from "../services";
 import { handleValidationErrors } from "../utils/validationErrors";
-import { existsValidator } from "../validator";
+import { existsValidator, uniqueValidator } from "../validator";
 
 const usuarioService = createBaseService(Usuario);
 
@@ -18,7 +18,8 @@ export const usuarioMiddleware = {
       .notEmpty()
       .withMessage("E-mail é obrigatório")
       .isEmail()
-      .withMessage("E-mail deve ser válido"),
+      .withMessage("E-mail deve ser válido")
+      .custom(uniqueValidator({ service: usuarioService, field: "email" })),
 
     body("senha")
       .notEmpty()
