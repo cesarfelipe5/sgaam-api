@@ -10,6 +10,7 @@ export const alunoController = {
       let totalAlunos;
 
       const { nome } = req.query;
+      const showAll = req.query.showAll === "true";
       const perPage = Number(req.query.perPage as string) || 10;
       const currentPage = Number(req.query.currentPage as string) || 1;
       const offset = (currentPage - 1) * perPage;
@@ -17,6 +18,7 @@ export const alunoController = {
       if (nome) {
         const { rows, count } = await alunoService.searchAlunos({
           nome: nome as string,
+          showAll,
           limit: perPage,
           offset,
         });
@@ -27,6 +29,7 @@ export const alunoController = {
         const { rows, count } = await alunoService.listAlunos({
           limit: perPage,
           offset,
+          showAll,
         });
 
         alunos = rows;

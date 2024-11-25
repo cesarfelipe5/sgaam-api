@@ -13,6 +13,7 @@ interface SearchAlunos {
   nome: string;
   limit: number;
   offset: number;
+  showAll: boolean;
 }
 
 export const alunoService = {
@@ -64,8 +65,21 @@ export const alunoService = {
    * @param limit - Máximo de dados a retornar
    * @param offset - Em qual posição inciar
    */
-  listAlunos: async ({ limit, offset }: { limit: number; offset: number }) => {
+  listAlunos: async ({
+    limit,
+    offset,
+    showAll = false,
+  }: {
+    limit: number;
+    offset: number;
+    showAll?: boolean;
+  }) => {
+    const whereClause = {
+      where: !showAll ? { isActive: true } : undefined,
+    };
+
     const alunos = await Aluno.findAndCountAll({
+      ...whereClause,
       include: [
         {
           model: Telefone,
@@ -74,6 +88,24 @@ export const alunoService = {
         {
           model: Plano,
           as: "planos",
+        },
+        {
+          model: PlanoAluno,
+          as: "planoAlunos",
+          include: [
+            {
+              model: Pagamento,
+              as: "pagamentos",
+              required: false, // Isso significa que um aluno pode não ter pagamentos ainda
+
+              include: [
+                {
+                  model: Usuario,
+                  as: "usuarios",
+                },
+              ],
+            },
+          ],
         },
       ],
       limit,
@@ -133,15 +165,55 @@ export const alunoService = {
    * Busca por alunos com base em critérios
    * @param nome - Nome parcial ou completo do aluno
    */
-  searchAlunos: async ({ nome, limit, offset }: SearchAlunos) => {
+  searchAlunos: async ({
+    nome,
+    limit,
+    offset,
+    showAll = false,
+  }: SearchAlunos) => {
+    // const whereClausule = !showAll ? { isActive: true } : undefined;
+
+    const whereClause = {
+      ...(showAll ? {} : { isActive: true }), // Se showAll for false, adiciona isActive: true
+      nome: {
+        [Op.like]: `%${nome}%`, // Condição para o nome
+      },
+    };
+
     const alunos = await Aluno.findAndCountAll({
+      where: {
+        ...whereClause,
+      },
       limit,
       offset,
-      where: {
-        nome: {
-          [Op.like]: `%${nome}%`,
+      include: [
+        {
+          model: Telefone,
+          as: "telefones",
         },
-      },
+        {
+          model: Plano,
+          as: "planos",
+        },
+        {
+          model: PlanoAluno,
+          as: "planoAlunos",
+          include: [
+            {
+              model: Pagamento,
+              as: "pagamentos",
+              required: false, // Isso significa que um aluno pode não ter pagamentos ainda
+
+              include: [
+                {
+                  model: Usuario,
+                  as: "usuarios",
+                },
+              ],
+            },
+          ],
+        },
+      ],
     });
 
     return alunos;
