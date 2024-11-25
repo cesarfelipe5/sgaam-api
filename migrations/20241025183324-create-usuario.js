@@ -1,3 +1,6 @@
+"use strict";
+
+/** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
     await queryInterface.createTable("Usuarios", {
@@ -20,7 +23,7 @@ module.exports = {
         allowNull: false,
       },
       isActive: {
-        type: DataTypes.BOOLEAN,
+        type: Sequelize.BOOLEAN,
         defaultValue: true,
         allowNull: false,
       },

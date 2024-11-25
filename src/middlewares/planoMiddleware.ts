@@ -96,8 +96,10 @@ export const planoMiddleware = {
 
     body("precoPadrao")
       .optional()
-      .isDecimal({ decimal_digits: "1,2" })
-      .withMessage("Valor deve ser um número decimal com até 2 casas decimais"),
+      .isFloat({ gt: 0 }) // Valida como número decimal (preço) e maior que zero
+      .withMessage("Preço padrão deve ser um valor numérico positivo"),
+    // .isDecimal({ decimal_digits: "1,2" })
+    // .withMessage("Valor deve ser um número decimal com até 2 casas decimais"),
 
     // Middleware de validação dos resultados
     handleValidationErrors,
