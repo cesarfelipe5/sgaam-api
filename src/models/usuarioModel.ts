@@ -62,12 +62,6 @@ export class Usuario
         sequelize,
         tableName: "Usuarios",
         timestamps: true,
-        defaultScope: {
-          attributes: { exclude: ["senha"] },
-        },
-        scopes: {
-          withPassword: {},
-        },
       }
     );
 
