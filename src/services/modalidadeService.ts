@@ -10,6 +10,7 @@ interface SearchModalidade {
   nome: string;
   limit: number;
   offset: number;
+  showAll: boolean;
 }
 
 export const modalidadeService = {
@@ -37,11 +38,18 @@ export const modalidadeService = {
   listModalidade: async ({
     limit,
     offset,
+    showAll = false,
   }: {
     limit: number;
     offset: number;
+    showAll: boolean;
   }) => {
+    const whereClause = {
+      where: !showAll ? { isActive: true } : undefined,
+    };
+
     const modalidade = await Modalidade.findAndCountAll({
+      ...whereClause,
       include: [{ model: Plano, as: "planos" }],
       limit,
       offset,
@@ -101,14 +109,24 @@ export const modalidadeService = {
    * Busca por modalidade com base em critérios
    * @param nome - Nome parcial ou completo da modalidade
    */
-  searchModalidade: async ({ nome, limit, offset }: SearchModalidade) => {
+  searchModalidade: async ({
+    nome,
+    limit,
+    offset,
+    showAll = false,
+  }: SearchModalidade) => {
+    const whereClause = {
+      ...(showAll ? {} : { isActive: true }), // Se showAll for false, adiciona isActive: true
+      nome: {
+        [Op.like]: `%${nome}%`, // Condição para o nome
+      },
+    };
+
     const modalidade = await Modalidade.findAndCountAll({
       limit,
       offset,
       where: {
-        nome: {
-          [Op.like]: `%${nome}%`,
-        },
+        ...whereClause,
       },
     });
 

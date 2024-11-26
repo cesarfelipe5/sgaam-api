@@ -10,6 +10,7 @@ export const modalidadeController = {
 
       const { nome } = req.query;
       const perPage = Number(req.query.perPage as string) || 10;
+      const showAll = req.query.showAll === "true";
 
       const currentPage = Number(req.query.currentPage as string) || 1;
 
@@ -18,6 +19,7 @@ export const modalidadeController = {
       if (nome) {
         const { rows, count } = await modalidadeService.searchModalidade({
           nome: nome as string,
+          showAll,
           limit: perPage,
           offset,
         });
@@ -27,6 +29,7 @@ export const modalidadeController = {
         totalModalidades = count;
       } else {
         const { rows, count } = await modalidadeService.listModalidade({
+          showAll,
           limit: perPage,
           offset,
         });
