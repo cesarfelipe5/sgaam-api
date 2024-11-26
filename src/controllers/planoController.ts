@@ -116,16 +116,19 @@ export const planoController = {
   update: async (req: Request, res: Response) => {
     try {
       const { id } = req.params;
+      const { modalidadeIds, ...updatedData } = req.body;
 
-      const updatedData = req.body;
-
-      const aluno = await planoService.updatePlano(Number(id), updatedData);
+      const plano = await planoService.updatePlano(
+        Number(id),
+        updatedData,
+        modalidadeIds
+      );
 
       return sendResponse({
         res,
         status: 200,
         message: "Plano atualizado com sucesso!",
-        data: aluno,
+        data: plano,
       });
     } catch (error) {
       return sendResponse({

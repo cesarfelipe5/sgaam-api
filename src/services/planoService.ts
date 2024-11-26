@@ -100,7 +100,11 @@ export const planoService = {
    * @param id - ID do plano
    * @param data - Dados a serem atualizados
    */
-  updatePlano: async (id: number, data: Partial<PlanoCreationAttributes>) => {
+  updatePlano: async (
+    id: number,
+    data: Partial<PlanoCreationAttributes>,
+    modalidadeIds?: number[]
+  ) => {
     try {
       const plano = await Plano.findByPk(id);
 
@@ -108,7 +112,32 @@ export const planoService = {
         throw new Error("Plano não encontrado");
       }
 
+      // Atualiza os dados do plano
       await plano.update(data);
+
+      if (modalidadeIds) {
+        // Valida os IDs das modalidades fornecidas
+        const modalidades = await Modalidade.findAll({
+          where: { id: modalidadeIds },
+        });
+
+        if (modalidades.length !== modalidadeIds.length) {
+          throw new Error(
+            "Uma ou mais modalidades não existem. Verifique os IDs fornecidos."
+          );
+        }
+
+        // Atualiza as associações de modalidades:
+        // Remove as associações existentes
+        await PlanoModalidade.destroy({ where: { idPlano: plano.id } });
+
+        // Cria as novas associações
+        const planoModalidades = modalidadeIds.map((idModalidade) => ({
+          idPlano: plano.id,
+          idModalidade,
+        }));
+        await PlanoModalidade.bulkCreate(planoModalidades);
+      }
 
       return plano;
     } catch (error) {
