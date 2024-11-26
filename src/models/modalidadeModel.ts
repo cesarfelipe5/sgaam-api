@@ -8,8 +8,7 @@ export interface ModalidadeAttributes {
   id: number;
   nome: string;
   descricao: string;
-  status: boolean;
-  valor: number;
+  isActive: boolean;
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -17,7 +16,7 @@ export interface ModalidadeAttributes {
 export interface ModalidadeCreationAttributes
   extends Optional<
     ModalidadeAttributes,
-    "id" | "status" | "createdAt" | "updatedAt"
+    "id" | "isActive" | "createdAt" | "updatedAt"
   > {}
 
 export class Modalidade
@@ -27,8 +26,7 @@ export class Modalidade
   public id!: number;
   public nome!: string;
   public descricao!: string;
-  public status!: boolean;
-  public valor!: number;
+  public isActive!: boolean;
   public readonly createdAt?: Date;
   public readonly updatedAt?: Date;
 
@@ -48,14 +46,10 @@ export class Modalidade
           type: DataTypes.STRING,
           allowNull: false,
         },
-        status: {
+        isActive: {
           type: DataTypes.BOOLEAN,
           allowNull: false,
           defaultValue: true,
-        },
-        valor: {
-          type: DataTypes.DECIMAL(15, 2),
-          allowNull: false,
         },
       },
       {

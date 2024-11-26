@@ -9,6 +9,7 @@ export interface PlanoAttributes {
   id: number;
   nome: string;
   descricao: string;
+  duracao: "Anual" | "Semestral" | "Trimestral" | "Mensal";
   // inicioVigencia: Date;
   // fimVigencia: Date;
   precoPadrao: Date;
@@ -34,6 +35,7 @@ export class Plano
   // public fimVigencia!: Date;
   public precoPadrao!: Date;
   public isActive!: Boolean;
+  public duracao!: "Anual" | "Semestral" | "Trimestral" | "Mensal";
   public readonly createdAt?: Date;
   public readonly updatedAt?: Date;
 
@@ -64,6 +66,10 @@ export class Plano
         precoPadrao: {
           type: DataTypes.DECIMAL,
           allowNull: false,
+        },
+        duracao: {
+          type: DataTypes.ENUM("Anual", "Semestral", "Trimestral", "Mensal"),
+          defaultValue: "Mensal",
         },
         isActive: {
           type: DataTypes.BOOLEAN,

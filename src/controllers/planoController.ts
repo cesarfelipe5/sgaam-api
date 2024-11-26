@@ -83,6 +83,7 @@ export const planoController = {
         descricao,
         // inicioVigencia, fimVigencia,
         precoPadrao,
+        duracao,
         modalidadeIds,
       } = req.body;
 
@@ -92,6 +93,7 @@ export const planoController = {
           descricao,
           // inicioVigencia, fimVigencia,
           precoPadrao,
+          duracao,
         },
         modalidadeIds
       );

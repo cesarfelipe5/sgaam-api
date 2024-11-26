@@ -18,12 +18,8 @@ module.exports = {
         type: Sequelize.TEXT,
         allowNull: false,
       },
-      status: {
+      isActive: {
         type: Sequelize.BOOLEAN,
-        allowNull: false,
-      },
-      valor: {
-        type: Sequelize.DECIMAL(15, 2),
         allowNull: false,
       },
       createdAt: {

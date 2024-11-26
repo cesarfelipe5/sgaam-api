@@ -94,7 +94,7 @@ export const modalidadeService = {
       throw new Error("Modalidade não encontrada");
     }
 
-    await modalidade.destroy();
+    await modalidade.update({ isActive: false });
   },
 
   /**

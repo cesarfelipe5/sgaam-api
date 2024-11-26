@@ -50,16 +50,7 @@ export const modalidadeMiddleware = {
       .notEmpty()
       .withMessage("Descrição é obrigatório"),
 
-    body("valor")
-      .optional()
-      .notEmpty()
-      .withMessage("Valor é obrigatório")
-      .isFloat({ min: 0 })
-      .withMessage("Valor deve ser um número positivo")
-      .matches(/^\d+(\.\d{1,2})?$/)
-      .withMessage("Valor deve ter no máximo 2 casas decimais"),
-
-    body("status")
+    body("isActive")
       .optional()
       .isBoolean()
       .withMessage("Campo deve ser um boolen"),

@@ -18,6 +18,11 @@ module.exports = {
         type: Sequelize.TEXT,
         allowNull: false,
       },
+      duracao: {
+        type: Sequelize.ENUM("Anual", "Semestral", "Trimestral", "Mensal"),
+        allowNull: false,
+        defaultValue: "Mensal",
+      },
       // inicioVigencia: {
       //   type: Sequelize.DATE,
       //   allowNull: false,

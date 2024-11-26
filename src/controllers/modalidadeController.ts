@@ -81,12 +81,11 @@ export const modalidadeController = {
 
   create: async (req: Request, res: Response) => {
     try {
-      const { nome, descricao, valor } = req.body;
+      const { nome, descricao } = req.body;
 
       const modalidade = await modalidadeService.createModalidade({
         nome,
         descricao,
-        valor,
       });
 
       return sendResponse({
