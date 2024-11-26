@@ -17,14 +17,6 @@ export const modalidadeMiddleware = {
 
     body("descricao").notEmpty().withMessage("Descrição é obrigatório"),
 
-    body("valor")
-      .notEmpty()
-      .withMessage("Valor é obrigatório")
-      .isFloat({ min: 0 })
-      .withMessage("Valor deve ser um número positivo")
-      .matches(/^\d+(\.\d{1,2})?$/)
-      .withMessage("Valor deve ter no máximo 2 casas decimais"),
-
     // Middleware de validação dos resultados
     handleValidationErrors,
   ],
